@@ -316,10 +316,12 @@ void generalDefault()
     g_eeGeneral.trainer.mix[i].studWeight = 100;
   }
 
+  /*
 #if defined(PCBX9E)
   const int8_t defaultName[] = { 20, -1, -18, -1, -14, -9, -19 };
   memcpy(g_eeGeneral.bluetoothName, defaultName, sizeof(defaultName));
 #endif
+*/
 
 #if !defined(EEPROM)
   strcpy(g_eeGeneral.currModelFilename, DEFAULT_MODEL_FILENAME);

@@ -31,7 +31,8 @@
 #elif defined(PCBX7)
   #define NUM_SWITCHES_218                  6
 #elif defined(PCBX9E)
-  #define NUM_SWITCHES_218                  18 // yes, it's a lot!
+  #define NUM_SWITCHES_218                  8 
+ //#define NUM_SWITCHES_218                  18 // yes, it's a lot!
 #else
   #define NUM_SWITCHES_218                  8
 #endif

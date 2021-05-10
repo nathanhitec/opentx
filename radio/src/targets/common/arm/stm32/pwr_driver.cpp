@@ -36,10 +36,11 @@ void pwrInit()
 #endif
 
   // Internal module power
+#if defined(INTMODULE_PWR_GPIO)
   GPIO_ResetBits(INTMODULE_PWR_GPIO, INTMODULE_PWR_GPIO_PIN);
   GPIO_InitStructure.GPIO_Pin = INTMODULE_PWR_GPIO_PIN;
   GPIO_Init(INTMODULE_PWR_GPIO, &GPIO_InitStructure);
-
+#endif
   // External module power
   EXTERNAL_MODULE_PWR_OFF();
   GPIO_InitStructure.GPIO_Pin = EXTMODULE_PWR_GPIO_PIN;

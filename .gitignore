@@ -9,4 +9,5 @@ cmake-build-*/
 /debian/
 /*.vscode
 radio/src/tests/googletest*
+/*.vs
 radio/src/tests/gtest*.tar.gz

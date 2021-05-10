@@ -63,7 +63,7 @@
 #endif
 
 
-//TODO: do I need to configure 3pos switches
+
 // Switches
 #if defined(GCSV2)
   #define STORAGE_SWITCH_A
@@ -123,7 +123,7 @@
   #define STORAGE_SWITCH_H
   #define HARDWARE_SWITCH_H
   #define SWITCHES_GPIO_REG_H           GPIOA->IDR
-  #define SWITCHES_GPIO_PIN_I           GPIO_PIN_10 //PA.10
+  #define SWITCHES_GPIO_PIN_H           GPIO_Pin_10 //PA.10
 #endif
 
 #if defined(GCSV2)
@@ -133,17 +133,17 @@
   #define SWITCHES_GPIO_PIN_I           GPIO_Pin_13  //PC.13
 #endif
 
-
 #if defined(GCSV2)
-  #define KEYS_RCC_AHB1Periph           (RCC_AHB1Periph_GPIOB|RCC_AHB1Periph_GPIOC|RCC_AHB1Periph_GPIOD|RCC_AHB1Periph_GPIOE)
-  #define KEYS_GPIOA_PINS               0
-  #define KEYS_GPIOB_PINS               (SWITCHES_GPIO_PIN_G_H | KEYS_GPIO_PIN_ENTER)
-  #define KEYS_GPIOC_PINS               (SWITCHES_GPIO_PIN_I)
-  #define KEYS_GPIOD_PINS               (ROTARY_ENCODER_GPIO_PIN_B | ROTARY_ENCODER_GPIO_PIN_A | SWITCHES_GPIO_PIN_B_L | SWITCHES_GPIO_PIN_B_H | SWITCHES_GPIO_PIN_A_L | SWITCHES_GPIO_PIN_A_H | KEYS_GPIO_PIN_PAGE | KEYS_GPIO_PIN_EXIT | KEYS_GPIO_PIN_MENU)
-  #define KEYS_GPIOE_PINS               (SWITCHES_GPIO_PIN_E_L | SWITCHES_GPIO_PIN_E_H | SWITCHES_GPIO_PIN_D_L | SWITCHES_GPIO_PIN_D_H | SWITCHES_GPIO_PIN_C_L | SWITCHES_GPIO_PIN_C_H | KEYS_GPIO_PIN_PLUS | KEYS_GPIO_PIN_MINUS)
-  #define KEYS_GPIOF_PINS               0
-  #define KEYS_GPIOG_PINS               0
+#define KEYS_RCC_AHB1Periph           (RCC_AHB1Periph_GPIOB|RCC_AHB1Periph_GPIOC|RCC_AHB1Periph_GPIOD|RCC_AHB1Periph_GPIOE)
+#define KEYS_GPIOA_PINS               (SWITCHES_GPIO_PIN_H)
+#define KEYS_GPIOB_PINS               (SWITCHES_GPIO_PIN_G_H | KEYS_GPIO_PIN_ENTER)
+#define KEYS_GPIOC_PINS               (SWITCHES_GPIO_PIN_I)
+#define KEYS_GPIOD_PINS               (ROTARY_ENCODER_GPIO_PIN_B | ROTARY_ENCODER_GPIO_PIN_A | SWITCHES_GPIO_PIN_B_L | SWITCHES_GPIO_PIN_B_H | SWITCHES_GPIO_PIN_A_L | SWITCHES_GPIO_PIN_A_H | KEYS_GPIO_PIN_PAGE | KEYS_GPIO_PIN_EXIT | KEYS_GPIO_PIN_MENU)
+#define KEYS_GPIOE_PINS               (SWITCHES_GPIO_PIN_E_L | SWITCHES_GPIO_PIN_E_H | SWITCHES_GPIO_PIN_D_L | SWITCHES_GPIO_PIN_D_H | SWITCHES_GPIO_PIN_C_L | SWITCHES_GPIO_PIN_C_H | KEYS_GPIO_PIN_PLUS | KEYS_GPIO_PIN_MINUS)
+#define KEYS_GPIOF_PINS               0
+#define KEYS_GPIOG_PINS               0
 #endif
+
 
 
 
@@ -257,7 +257,6 @@
   #define EXTMODULE_RCC_AHB1Periph    (RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_DMA2)
   #define EXTMODULE_PWR_GPIO          GPIOD
   #define EXTMODULE_PWR_GPIO_PIN      GPIO_Pin_8  // PD.08
-
   #define EXTERNAL_MODULE_PWR_ON()      GPIO_SetBits(EXTMODULE_PWR_GPIO, EXTMODULE_PWR_GPIO_PIN)
   #define EXTERNAL_MODULE_PWR_OFF()     GPIO_ResetBits(EXTMODULE_PWR_GPIO, EXTMODULE_PWR_GPIO_PIN)
   #define IS_EXTERNAL_MODULE_ON()       (GPIO_ReadInputDataBit(EXTMODULE_PWR_GPIO, EXTMODULE_PWR_GPIO_PIN) == Bit_SET)
@@ -296,19 +295,16 @@
 #define DEBUG_GPIO                     GPIOA
 #define DEBUG_SWDIO_GPIO_PIN_SOURCE    GPIO_PinSource13
 #define DEBUG_SWDCLK_GPIO_PIN_SOURCE   GPIO_PinSource14
-#define DEBUG_SWDIO_GPIO_PIN           GPIO_PIN_13 //PA.13
-#define DEBUG_SWDCLK_GPIO_PIN          GPIO_PIN_14 //PA.14
+#define DEBUG_SWDIO_GPIO_PIN           GPIO_Pin_13 //PA.13
+#define DEBUG_SWDCLK_GPIO_PIN          GPIO_Pin_14 //PA.14
 //add support for pi debugging here, configure UART, simple serial interface for debug prints? 
-
 #endif
 
 
 //TODO: do I need to configure external clocks?, XTAL1, XTAL2, what clocks to use for perifs? 
-#if defined(GCSV2)
 
-#endif
 
-//Baro placeholder 
+//TODO: add initialization, check if it's there? Baro placeholder 
 #if defined(GCSV2)
   #define BARO_GPIO           GPIOE
   #define BARO_GPIO_CS_PIN    GPIO_PIN_1       
@@ -323,7 +319,7 @@
 #endif
 
 
-// Trainer Port
+// Trainer Port?
 #if defined(GCSV2)
   #define TRAINER_RCC_AHB1Periph        (RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_DMA1)
   #define TRAINER_RCC_APB1Periph        RCC_APB1Periph_TIM3
@@ -360,32 +356,25 @@
   #define TRAINER_CCER_POLARYTY         TIM_CCER_CC4P
 #endif
 
-#if defined(GCSV2)
-  #define TRAINER_MODULE_CPPM
-  #define TRAINER_MODULE_SBUS
-  #define TRAINER_MODULE_RCC_AHB1Periph      0
-  #define TRAINER_MODULE_RCC_APB1Periph      RCC_APB1Periph_TIM3
-  #define TRAINER_MODULE_RCC_APB2Periph      0
-  #define TRAINER_MODULE_CPPM_GPIO           EXTMODULE_USART_GPIO
-  #define TRAINER_MODULE_CPPM_GPIO_PIN       EXTMODULE_RX_GPIO_PIN
-  #define TRAINER_MODULE_CPPM_GPIO_PinSource EXTMODULE_RX_GPIO_PinSource
-  #define TRAINER_MODULE_CPPM_GPIO_AF        GPIO_AF_TIM3
-  #define TRAINER_MODULE_CPPM_TIMER          TIM3
-  #define TRAINER_MODULE_CPPM_INTERRUPT_ENABLE TIM_DIER_CC2IE
-  #define TRAINER_MODULE_CPPM_INTERRUPT_FLAG   TIM_SR_CC2IF
-  #define TRAINER_MODULE_CPPM_CCMR1            (TIM_CCMR1_IC2F_0 | TIM_CCMR1_IC2F_1 | TIM_CCMR1_CC2S_0)
-  #define TRAINER_MODULE_CPPM_CCER             TIM_CCER_CC2E
-  #define TRAINER_MODULE_CPPM_TIMER_IRQn       TIM3_IRQn
-  #define TRAINER_MODULE_CPPM_TIMER_IRQHandler TIM3_IRQHandler
-  #define TRAINER_MODULE_SBUS_GPIO             EXTMODULE_USART_GPIO
-  #define TRAINER_MODULE_SBUS_GPIO_PIN         EXTMODULE_RX_GPIO_PIN
-  #define TRAINER_MODULE_SBUS_GPIO_AF          EXTMODULE_USART_GPIO_AF
-  #define TRAINER_MODULE_SBUS_USART            EXTMODULE_USART
-  #define TRAINER_MODULE_SBUS_GPIO_PinSource   EXTMODULE_RX_GPIO_PinSource
-  #define TRAINER_MODULE_SBUS_DMA_STREAM       EXTMODULE_USART_RX_DMA_STREAM
-  #define TRAINER_MODULE_SBUS_DMA_CHANNEL      EXTMODULE_USART_RX_DMA_CHANNEL
-#endif
 
+#define PCBREV_RCC_AHB1Periph 0
+#define HAPTIC_RCC_AHB1Periph 0
+#define INTMODULE_RCC_AHB1Periph 0
+#define SPORT_UPDATE_RCC_AHB1Periph 0
+#define TRAINER_MODULE_RCC_AHB1Periph 0
+#define BT_RCC_AHB1Periph 0
+#define GYRO_RCC_AHB1Periph 0
+#define HAPTIC_RCC_APB1Periph 0
+#define TELEMETRY_RCC_APB1Periph 0
+#define INTMODULE_RCC_APB1Periph 0
+#define TRAINER_MODULE_RCC_APB1Periph 0
+#define BT_RCC_APB1Periph 0
+#define GYRO_RCC_APB1Periph 0
+#define HAPTIC_RCC_APB2Periph 0
+#define INTMODULE_RCC_APB2Periph 0
+#define TRAINER_MODULE_RCC_APB2Periph 0
+#define BT_RCC_APB2Periph 0
+#define TELEMETRY_RCC_APB2Periph 0
 
 // No aux
 #define AUX2_SERIAL_RCC_AHB1Periph        0
@@ -450,8 +439,7 @@
   #define LCD_CLK_GPIO_PIN              GPIO_Pin_10 // PC.10
   #define LCD_CLK_GPIO_PinSource        GPIO_PinSource10
   #define LCD_A0_GPIO_PIN               GPIO_Pin_11 // PC.11
-
-  #define LCD_NCS_GPIO                  GPIOB
+  #define LCD_NCS_GPIO                  GPIOA
   #define LCD_NCS_GPIO_PIN              GPIO_Pin_15 // PA.15
   #define LCD_RST_GPIO                  GPIOD
   #define LCD_RST_GPIO_PIN              GPIO_Pin_15 // PD.15
@@ -476,10 +464,11 @@
   #define I2C_SPI_GPIO                  GPIOB
   #define I2C_SDA_GPIO_PIN              GPIO_Pin_9  // PB.09
   #define I2C_SCL_GPIO_PIN              GPIO_Pin_8  // PB.08
-  #define I2C_WP_GPIO                   GPIOD
-  #define I2C_WP_GPIO_PIN               GPIO_Pin_7  // PD.07
+  #define I2C_WP_GPIO                   GPIOB
+  #define I2C_WP_GPIO_PIN               GPIO_Pin_7  // PB.07
   #define I2C_SCL_GPIO_PinSource        GPIO_PinSource8
   #define I2C_SDA_GPIO_PinSource        GPIO_PinSource9
+  #define I2C_ADDRESS_VOLUME            0x5C
 #endif
 #define I2C_SPEED                       400000
 #define I2C_ADDRESS_EEPROM              0xA2
@@ -494,8 +483,8 @@
 #define SD_GPIO_PIN_SCK                 GPIO_Pin_13 // PB.13
 #define SD_GPIO_PIN_MISO                GPIO_Pin_14 // PB.14
 #define SD_GPIO_PIN_MOSI                GPIO_Pin_15 // PB.15
-#define SD_PRESENT_GPIO_PIN             GPIOB
-#define SD_PRESENT_GPIO                 GPIO_Pin_6  // PB.06
+#define SD_GPIO_PRESENT_GPIO            GPIOB
+#define SD_GPIO_PRESENT_GPIO_PIN        GPIO_Pin_6  // PB.06
 #define SD_GPIO_AF                      GPIO_AF_SPI2
 #define SD_GPIO_PinSource_CS            GPIO_PinSource12
 #define SD_GPIO_PinSource_SCK           GPIO_PinSource13
@@ -504,7 +493,7 @@
 #define SD_SPI                          SPI2
 #define SD_SPI_BaudRatePrescaler        SPI_BaudRatePrescaler_4 // 10.5<20MHZ, make sure < 20MHZ
 
-//BOOT is never defined
+
 #if !defined(BOOT)
   #define SD_USE_DMA                    // Enable the DMA for SD
   #define SD_DMA_Stream_SPI_RX          DMA1_Stream3

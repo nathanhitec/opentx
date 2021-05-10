@@ -351,7 +351,7 @@ void OpenTxSim::updateKeysAndSwitches(bool start)
 
   #if defined(HARDWARE_SWITCH_G) && defined(HARDWARE_SWITCH_H)
     SWITCH_KEY(E, 4, 3);
-    SWITCH_KEY(F, 5, 2);
+ //   SWITCH_KEY(F, 5, 2);
     SWITCH_KEY(G, 6, 3);
     SWITCH_KEY(H, 7, 2);
   #elif defined(HARDWARE_SWITCH_F) && defined(HARDWARE_SWITCH_H)
@@ -361,6 +361,7 @@ void OpenTxSim::updateKeysAndSwitches(bool start)
 
   #if defined(PCBX9E)
     SWITCH_KEY(I, 8, 3);
+    /*
     SWITCH_KEY(J, 9, 3);
     SWITCH_KEY(K, 10, 3);
     SWITCH_KEY(L, 11, 3);
@@ -369,7 +370,7 @@ void OpenTxSim::updateKeysAndSwitches(bool start)
     SWITCH_KEY(O, 14, 3);
     SWITCH_KEY(P, 15, 3);
     SWITCH_KEY(Q, 16, 3);
-    SWITCH_KEY(R, 17, 3);
+    SWITCH_KEY(R, 17, 3)*/
   #endif
 #endif
 }

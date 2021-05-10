@@ -56,7 +56,8 @@ LogicalSwitchesFlightModeContext lswFm[MAX_FLIGHT_MODES];
 
 #if defined(PCBTARANIS) || defined(PCBHORUS)
 #if defined(PCBX9E)
-tmr10ms_t switchesMidposStart[16];
+tmr10ms_t switchesMidposStart[6];
+//tmr10ms_t switchesMidposStart[16];
 #else
 tmr10ms_t switchesMidposStart[6]; // TODO constant
 #endif
@@ -163,7 +164,7 @@ void getSwitchesPosition(bool startup)
 #else
   CHECK_3POS(3, SW_SD);
   CHECK_3POS(4, SW_SE);
-  CHECK_2POS(SW_SF);
+  //CHECK_2POS(SW_SF);
   CHECK_3POS(5, SW_SG);
   CHECK_2POS(SW_SH);
 #endif
@@ -181,6 +182,7 @@ void getSwitchesPosition(bool startup)
 
 #if defined(PCBX9E)
   CHECK_3POS(6, SW_SI);
+  /*
   CHECK_3POS(7, SW_SJ);
   CHECK_3POS(8, SW_SK);
   CHECK_3POS(9, SW_SL);
@@ -190,6 +192,7 @@ void getSwitchesPosition(bool startup)
   CHECK_3POS(13, SW_SP);
   CHECK_3POS(14, SW_SQ);
   CHECK_3POS(15, SW_SR);
+  */
 #endif
 
   switchesPos = newPos;

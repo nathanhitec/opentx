@@ -1,56 +1,58 @@
+option(SHUTDOWN_CONFIRMATION "Shutdown confirmation" OFF)
+option(LCD_DUAL_BUFFER "Dual LCD Buffer" OFF)
+option(PXX1 "PXX1 protocol support" OFF)
+option(PXX2 "PXX2 protocol support" OFF)
+option(AFHDS3 "AFHDS3 TX Module" OFF)
+option(GHOST "Ghost TX Module" OFF)
+option(INTERNAL_MODULE_PPM "Support for PPM internal module" OFF)
+option(AUTOUPDATE "Auto update internal chips from SD" OFF)
+option(BIND_KEY "Enable bind button" OFF)
+
+set(EXTERNAL_MODULE YES)
 
 if(PCBREV STREQUAL GCSV2)
-  set(PWR_BUTTON "SWITCH" CACHE STRING "Pwr button type (PRESS/SWITCH)")
-  set(STICKS "STANDARD" CACHE STRING "Sticks type (STANDARD/HORUS)")
+  set(PWR_BUTTON SWITCH)
+  set(STICKS STANDARD)
   set(CPU_TYPE STM32F4)
-  set(CPU_TYPE_FULL "STM32F407xE" CACHE STRING "Chip type (STM32F407xE/STM32F27xE)")
+  set(CPU_TYPE_FULL STM32F407xE)
   set(LINKER_SCRIPT targets/hitec/stm32f4_flash.ld)
   add_definitions(-DSTM32F40_41xxx)
-  set(EXTERNAL_MODULE YES)
+  
+ 
 
-  set(LUA no) #TODO: should I do this?
-  set(LUA_EXPORT lua_export_tx12) #LUA_EXPORT reference
+  #hijacking x9e model definitions for now
+  set(LUA_EXPORT lua_export_x9e) 
+  set(FLAVOUR gcsv2)
+  add_definitions(-DPCBX9E -DPCBX9 -DGCSV2)
 
-  set(FLAVOUR gcsv2) #FLAVOUR Should be ok, seems to only be used for text
-
-  add_definitions(-DPCBX7) #TODO: referenced in 25 files
-
-  add_definitions(-DRADIO_TX12) #TODO: referenced in 26 files
-
-  set(NAVIGATION_TYPE x7)#TODO: Might need to implement own nav? Really don't want to
-
-  add_definitions(-DMANUFACTURER_RADIOMASTER)#should be ok, only used for text
-
-  add_definitions(-DPCBTARANIS) #TODO: referenced in 68 files
-  add_definitions(-DPCBX7 -DSOFTWARE_VOLUME) #TODO: referenced in 7 files
-
-  #TODO: is this ok for eeporm variant?
-  add_definitions(-DEEPROM_VARIANT=0x4002)
+   #TODO: is this the correct eeporm variant?
+  add_definitions(-DEEPROM_VARIANT=0x8000)
 
   add_definitions(-DPWR_BUTTON_${PWR_BUTTON})
 
-
-  add_definitions(-DAUDIO -DVOICE -DRTCLOCK)
-  set(USB_CHARGER YES)
-
   set(FIRMWARE_TARGET_SRC
     ${FIRMWARE_TARGET_SRC}
+    top_lcd_driver.cpp
     startup_stm32f40_41xxx.s
     )
 
-  set(GUI_DIR 128x64)
-
-  #TODO: need to see if this correct navigation type
-  set(NAVIGATION_TYPE x9d)
-
-  #TODO: Do custom bitmaps for hitec need to be made?
-  set(BITMAPS_TARGET 9x_bitmaps)
-  set(FONTS_TARGET 9x_fonts_1bit)
+  
+  set(USB_CHARGER YES)
+  
+  #TODO: might need to change, nav type, gui_dir and bitmap targets
+  set(GUI_DIR 212x64)
+  set(NAVIGATION_TYPE x9d) 
+  set(BITMAPS_TARGET taranis_bitmaps)
+  set(FONTS_TARGET taranis_fonts)
 
   set(LCD_DRIVER lcd_driver_spi.cpp)
   set(GVAR_SCREEN model_gvars.cpp)
   set(STATUS_LEDS YES)
   set(ROTARY_ENCODER YES)
+
+  #TODO: can add hitec def instead of frsky
+  add_definitions(-DMANUFACTURER_FRSKY)
+
 else()
    message(FATAL_ERROR "Unknown PCBREV: '${PCBREV}' expecting GCSV2")
 endif()
@@ -68,16 +70,27 @@ if(USB_CHARGER)
   add_definitions(-DUSB_CHARGER)
 endif()
 
-set(SRC
-  ${SRC}
-  io/frsky_firmware_update.cpp
-  io/multi_firmware_update.cpp
-  )
+
 
 set(HSE_VALUE 12000000)
 set(SDCARD YES)
 set(EEPROM EEPROM_RLC)
 set(TARGET_DIR hitec)
+set(PPM_LIMITS_SYMETRICAL YES)
+
+if(SPLASH STREQUAL OFF)
+  message(FATAL_ERROR "Option SPLASH=OFF not supported on hitec")
+endif()
+
+add_definitions(-DPCBTARANIS)
+add_definitions(-DAUDIO -DVOICE -DRTCLOCK)
+add_definitions(-DSBUS_TRAINER)
+
+set(SRC
+  ${SRC}
+  io/frsky_firmware_update.cpp
+  io/multi_firmware_update.cpp
+  )
 
 set(GUI_SRC
   ${GUI_SRC}
@@ -96,6 +109,10 @@ if(STATUS_LEDS)
   set(LED_DRIVER led_driver.cpp)
 endif()
 
+set(SRC
+  ${SRC}
+  sbus.cpp
+  )
 
 set(TARGET_SRC
   ${TARGET_SRC}
@@ -110,10 +127,7 @@ set(TARGET_SRC
   ../common/arm/stm32/mixer_scheduler_driver.cpp
   )
 
-set(TARGET_SRC
-    ${TARGET_SRC}
-    ../common/arm/stm32/sticks_pwm_driver.cpp
-    )
+
 
 set(FIRMWARE_TARGET_SRC
   ${FIRMWARE_TARGET_SRC}

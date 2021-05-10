@@ -20,7 +20,6 @@
 
 #include "opentx.h"
 
-//TODO: going to need to add support for switches
 
 
 uint32_t readKeys()
@@ -103,32 +102,7 @@ uint32_t readKeys()
 uint32_t readTrims()
 {
   uint32_t result = 0;
-
-  if (~TRIMS_GPIO_REG_LHL & TRIMS_GPIO_PIN_LHL)
-    result |= 0x01;
-  if (~TRIMS_GPIO_REG_LHR & TRIMS_GPIO_PIN_LHR)
-    result |= 0x02;
-  if (~TRIMS_GPIO_REG_LVD & TRIMS_GPIO_PIN_LVD)
-    result |= 0x04;
-  if (~TRIMS_GPIO_REG_LVU & TRIMS_GPIO_PIN_LVU)
-    result |= 0x08;
-
-#if defined(PCBXLITE)
-  if (IS_SHIFT_PRESSED())
-    result = ((result & 0x03) << 6) | ((result & 0x0c) << 2);
-#else
-  if (~TRIMS_GPIO_REG_RVD & TRIMS_GPIO_PIN_RVD)
-    result |= 0x10;
-  if (~TRIMS_GPIO_REG_RVU & TRIMS_GPIO_PIN_RVU)
-    result |= 0x20;
-  if (~TRIMS_GPIO_REG_RHL & TRIMS_GPIO_PIN_RHL)
-    result |= 0x40;
-  if (~TRIMS_GPIO_REG_RHR & TRIMS_GPIO_PIN_RHR)
-    result |= 0x80;
-#endif
-
-  // TRACE("readTrims(): result=0x%02x", result);
-
+  //No Trims
   return result;
 }
 
@@ -166,7 +140,7 @@ void readKeysAndTrims()
   }
 }
 
-#if defined(PCBX9E)
+
   #define ADD_2POS_CASE(x) \
     case SW_S ## x ## 2: \
       xxx = SWITCHES_GPIO_REG_ ## x  & SWITCHES_GPIO_PIN_ ## x ; \
@@ -174,15 +148,7 @@ void readKeysAndTrims()
     case SW_S ## x ## 0: \
       xxx = ~SWITCHES_GPIO_REG_ ## x  & SWITCHES_GPIO_PIN_ ## x ; \
       break
-#else
-  #define ADD_2POS_CASE(x) \
-    case SW_S ## x ## 0: \
-      xxx = SWITCHES_GPIO_REG_ ## x  & SWITCHES_GPIO_PIN_ ## x ; \
-      break; \
-    case SW_S ## x ## 2: \
-      xxx = ~SWITCHES_GPIO_REG_ ## x  & SWITCHES_GPIO_PIN_ ## x ; \
-      break
-#endif
+
 
 #define ADD_3POS_CASE(x, i) \
   case SW_S ## x ## 0: \
@@ -202,86 +168,20 @@ void readKeysAndTrims()
     break
 
 #if !defined(BOOT)
+//TODO: might need to change 
 uint32_t switchState(uint8_t index)
 {
   uint32_t xxx = 0;
 
   switch (index) {
-
-#if defined(RADIO_TX12) || defined(RADIO_T8)
-    ADD_2POS_CASE(A);
-    ADD_3POS_CASE(B, 1);
-    ADD_3POS_CASE(C, 2);
-#elif defined(RADIO_TLITE)
-    ADD_3POS_CASE(A, 0);
-    ADD_3POS_CASE(B, 1);
-    ADD_2POS_CASE(C);
-    ADD_2POS_CASE(D);
-#else
-    ADD_3POS_CASE(A, 0);
-    ADD_3POS_CASE(B, 1);
-    ADD_3POS_CASE(C, 2);
-#endif
-#if defined(PCBX9LITES)
-    ADD_2POS_CASE(D);
-    ADD_2POS_CASE(E);
-    ADD_2POS_CASE(F);
-    ADD_2POS_CASE(G);
-#elif defined(PCBX9LITE)
-    ADD_2POS_CASE(D);
-    ADD_2POS_CASE(E);
-#elif defined(PCBXLITES)
-    ADD_3POS_CASE(D, 3);
-    ADD_2POS_CASE(E);
-    ADD_2POS_CASE(F);
-    // no SWG and SWH on XLITES
-#elif defined(PCBXLITE)
-    ADD_3POS_CASE(D, 3);
-    // no SWE, SWF, SWG and SWH on XLITE
-#elif defined(PCBX7ACCESS)    
-    ADD_3POS_CASE(D, 3);
-    ADD_2POS_CASE(F);
-    ADD_2POS_CASE(H);
-    ADD_2POS_CASE(I);
-    // no SWJ on XLITE
-#elif defined(RADIO_TX12)
-    ADD_2POS_CASE(D);
-    ADD_3POS_CASE(E, 4);
-    ADD_3POS_CASE(F, 5);
-#elif defined(RADIO_T8)
-    ADD_2POS_CASE(D);
-#elif defined(RADIO_TLITE)
-    // Only 4 switches
-#elif defined(PCBX7)
-    ADD_3POS_CASE(D, 3);
-    ADD_2POS_CASE(F);
-    ADD_2POS_CASE(H);
-    ADD_2POS_CASE(I);
-    ADD_2POS_CASE(J);
-#else
-    ADD_3POS_CASE(D, 3);
-    ADD_3POS_CASE(E, 4);
-    ADD_2POS_CASE(F);
-    ADD_3POS_CASE(G, 6);
-    ADD_2POS_CASE(H);
-#endif
-
-#if defined(RADIO_X9DP2019)
-    ADD_2POS_CASE(I);
-#endif
-
-#if defined(PCBX9E)
-    ADD_3POS_CASE(I, 8);
-    ADD_3POS_CASE(J, 9);
-    ADD_3POS_CASE(K, 10);
-    ADD_3POS_CASE(L, 11);
-    ADD_3POS_CASE(M, 12);
-    ADD_3POS_CASE(N, 13);
-    ADD_3POS_CASE(O, 14);
-    ADD_3POS_CASE(P, 15);
-    ADD_3POS_CASE(Q, 16);
-    ADD_3POS_CASE(R, 17);
-#endif
+      ADD_3POS_CASE(A, 0);
+      ADD_3POS_CASE(B, 1);
+      ADD_3POS_CASE(C, 2);
+      ADD_3POS_CASE(D, 3);
+      ADD_3POS_CASE(E, 4);
+      ADD_3POS_CASE(G, 6);
+      ADD_2POS_CASE(H);
+      ADD_2POS_CASE(I);
 
     default:
       break;

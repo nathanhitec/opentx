@@ -22,7 +22,7 @@
 
 
 #define LCD_CONTRAST_OFFSET            160
-#endif
+
 #define RESET_WAIT_DELAY_MS            300 // Wait time after LCD reset before first command
 #define WAIT_FOR_DMA_END()             do { } while (lcd_busy)
 
