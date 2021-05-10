@@ -62,8 +62,6 @@
   #define ROTARY_ENCODER_RCC_APB1Periph   0
 #endif
 
-
-
 // Switches
 #if defined(GCSV2)
   #define STORAGE_SWITCH_A
@@ -143,10 +141,6 @@
 #define KEYS_GPIOF_PINS               0
 #define KEYS_GPIOG_PINS               0
 #endif
-
-
-
-
 
 //ADC sticks, pots, sliders, battery,
 //channel selection 0 for ADC1 on DMA2 using stream4
@@ -304,13 +298,6 @@
 //TODO: do I need to configure external clocks?, XTAL1, XTAL2, what clocks to use for perifs? 
 
 
-//TODO: add initialization, check if it's there? Baro placeholder 
-#if defined(GCSV2)
-  #define BARO_GPIO           GPIOE
-  #define BARO_GPIO_CS_PIN    GPIO_PIN_1       
-#endif
-
-
 //PI UART placeholder
 #if defined(GCSV2)
    #define PI_UART_GPIO      GPOIOD
@@ -319,7 +306,7 @@
 #endif
 
 
-// Trainer Port?
+// Trainer Port
 #if defined(GCSV2)
   #define TRAINER_RCC_AHB1Periph        (RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_DMA1)
   #define TRAINER_RCC_APB1Periph        RCC_APB1Periph_TIM3
@@ -357,26 +344,24 @@
 #endif
 
 
-#define PCBREV_RCC_AHB1Periph 0
-#define HAPTIC_RCC_AHB1Periph 0
-#define INTMODULE_RCC_AHB1Periph 0
-#define SPORT_UPDATE_RCC_AHB1Periph 0
-#define TRAINER_MODULE_RCC_AHB1Periph 0
-#define BT_RCC_AHB1Periph 0
-#define GYRO_RCC_AHB1Periph 0
-#define HAPTIC_RCC_APB1Periph 0
-#define TELEMETRY_RCC_APB1Periph 0
-#define INTMODULE_RCC_APB1Periph 0
-#define TRAINER_MODULE_RCC_APB1Periph 0
-#define BT_RCC_APB1Periph 0
-#define GYRO_RCC_APB1Periph 0
-#define HAPTIC_RCC_APB2Periph 0
-#define INTMODULE_RCC_APB2Periph 0
-#define TRAINER_MODULE_RCC_APB2Periph 0
-#define BT_RCC_APB2Periph 0
-#define TELEMETRY_RCC_APB2Periph 0
-
-// No aux
+#define PCBREV_RCC_AHB1Periph             0
+#define HAPTIC_RCC_AHB1Periph             0
+#define INTMODULE_RCC_AHB1Periph          0
+#define SPORT_UPDATE_RCC_AHB1Periph       0
+#define TRAINER_MODULE_RCC_AHB1Periph     0
+#define BT_RCC_AHB1Periph                 0
+#define GYRO_RCC_AHB1Periph               0
+#define HAPTIC_RCC_APB1Periph             0
+#define TELEMETRY_RCC_APB1Periph          0
+#define INTMODULE_RCC_APB1Periph          0
+#define TRAINER_MODULE_RCC_APB1Periph     0
+#define BT_RCC_APB1Periph                 0
+#define GYRO_RCC_APB1Periph               0
+#define HAPTIC_RCC_APB2Periph             0
+#define INTMODULE_RCC_APB2Periph          0
+#define TRAINER_MODULE_RCC_APB2Periph     0
+#define BT_RCC_APB2Periph                 0
+#define TELEMETRY_RCC_APB2Periph          0
 #define AUX2_SERIAL_RCC_AHB1Periph        0
 #define AUX2_SERIAL_RCC_APB1Periph        0
 #define AUX2_SERIAL_RCC_APB2Periph        0
@@ -429,7 +414,7 @@
 #define KEYS_BACKLIGHT_RCC_AHB1Periph        0
 
 
-
+//LCD and baro on SPI3
 #if defined(GCSV2)
   #define LCD_RCC_AHB1Periph            (RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_DMA1)
   #define LCD_RCC_APB1Periph            RCC_APB1Periph_SPI3
@@ -438,7 +423,8 @@
   #define LCD_MOSI_GPIO_PinSource       GPIO_PinSource12
   #define LCD_CLK_GPIO_PIN              GPIO_Pin_10 // PC.10
   #define LCD_CLK_GPIO_PinSource        GPIO_PinSource10
-  #define LCD_A0_GPIO_PIN               GPIO_Pin_11 // PC.11
+  #define LCD_MISO_GPIO_PIN             GPIO_Pin_11 // PC.11 Assumed to be MISO in BARO?
+  #define LCD_MISO_GPIO_PinSource       GPIO_PinSource11
   #define LCD_NCS_GPIO                  GPIOA
   #define LCD_NCS_GPIO_PIN              GPIO_Pin_15 // PA.15
   #define LCD_RST_GPIO                  GPIOD
@@ -451,6 +437,17 @@
   #define LCD_DMA_FLAG_INT              DMA_HIFCR_CTCIF7
   #define LCD_SPI                       SPI3
   #define LCD_GPIO_AF                   GPIO_AF_SPI3
+
+  #define BARO_GPIO                      GPIOE
+  #define BARO_GPIO_CS_PIN               GPIO_Pin_1  
+/*
+  #define BARO_DMA                       DMA1
+  #define BARO_DMA_Stream                DMA1_Stream0
+  #define BARO_DMA_Stream_IRQn           DMA1_Stream0_IRQn
+  #define BARO_DMA_Stream_IRQHandler     DMA1_Stream0_IRQHandler
+  #define BARO_DMA_FLAGS                 (DMA_HIFCR_CTCIF0 | DMA_HIFCR_CHTIF0 | DMA_HIFCR_CTEIF0 | DMA_HIFCR_CDMEIF0 | DMA_HIFCR_CFEIF0)
+  #define BARO_DMA_FLAG_INT              DMA_HIFCR_CTCIF0
+  */
 #endif
 #define LCD_RCC_APB2Periph              0
 

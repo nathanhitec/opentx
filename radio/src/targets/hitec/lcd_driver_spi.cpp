@@ -29,25 +29,24 @@
 #define LCD_NCS_HIGH()                 LCD_NCS_GPIO->BSRRL = LCD_NCS_GPIO_PIN
 #define LCD_NCS_LOW()                  LCD_NCS_GPIO->BSRRH = LCD_NCS_GPIO_PIN
 
-#define LCD_A0_HIGH()                  LCD_SPI_GPIO->BSRRL = LCD_A0_GPIO_PIN
-#define LCD_A0_LOW()                   LCD_SPI_GPIO->BSRRH = LCD_A0_GPIO_PIN
-
 #define LCD_RST_HIGH()                 LCD_RST_GPIO->BSRRL = LCD_RST_GPIO_PIN
 #define LCD_RST_LOW()                  LCD_RST_GPIO->BSRRH = LCD_RST_GPIO_PIN
+
 
 bool lcdInitFinished = false;
 void lcdInitFinish();
 
 void lcdWriteCommand(uint8_t byte)
 {
-  LCD_A0_LOW();
+ 
   LCD_NCS_LOW();
-  //while no errors and transmit buffer is empty wait
+  //while no errors and transmit buffer is not empty wait
   while ((SPI3->SR & SPI_SR_TXE) == 0) {
     // Wait
   }
   (void)SPI3->DR; // Clear receive
   LCD_SPI->DR = byte;
+  //while no erros and recv buffer
   while ((SPI3->SR & SPI_SR_RXNE) == 0) {
     // Wait
   }
@@ -56,18 +55,13 @@ void lcdWriteCommand(uint8_t byte)
 
 
 
+//Mode 3
 void lcdHardwareInit()
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 
   // APB1 clock / 2 = 133nS per clock
   LCD_SPI->CR1 = 0; // Clear any mode error
-  //ssm=software slave managment, nss pin input replaced with value form ssi bit
-  //ssi=internal slave select value of bit forced onto nss pin 
-  //cpol=1 when idle
-  //cpha=second transition is first data capture edge
-  //mstr=master config
-  //spe=enable
   LCD_SPI->CR1 = SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_CPOL | SPI_CR1_CPHA;
   LCD_SPI->CR2 = 0;
   LCD_SPI->CR1 |= SPI_CR1_MSTR;	// Make sure in case SSM/SSI needed to be set first
@@ -85,16 +79,13 @@ void lcdHardwareInit()
   GPIO_InitStructure.GPIO_Pin = LCD_RST_GPIO_PIN;
   GPIO_Init(LCD_RST_GPIO, &GPIO_InitStructure);
 
-  GPIO_InitStructure.GPIO_Pin = LCD_A0_GPIO_PIN;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(LCD_SPI_GPIO, &GPIO_InitStructure);
-
-  GPIO_InitStructure.GPIO_Pin = LCD_CLK_GPIO_PIN | LCD_MOSI_GPIO_PIN;
+  GPIO_InitStructure.GPIO_Pin = LCD_CLK_GPIO_PIN | LCD_MOSI_GPIO_PIN | LCD_MISO_GPIO_PIN;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_Init(LCD_SPI_GPIO, &GPIO_InitStructure);
 
   GPIO_PinAFConfig(LCD_SPI_GPIO, LCD_MOSI_GPIO_PinSource, LCD_GPIO_AF);
   GPIO_PinAFConfig(LCD_SPI_GPIO, LCD_CLK_GPIO_PinSource, LCD_GPIO_AF);
+  GPIO_PinAFConfig(LCD_SPI_GPIO, LCD_MISO_GPIO_PinSource, LCD_GPIO_AF);
 
   LCD_DMA_Stream->CR &= ~DMA_SxCR_EN; // Disable DMA
   LCD_DMA->HIFCR = LCD_DMA_FLAGS; // Write ones to clear bits
@@ -213,7 +204,6 @@ void lcdRefresh(bool wait)
 #endif
 
     LCD_NCS_LOW();
-    LCD_A0_HIGH();
 
     lcd_busy = true;
     LCD_DMA_Stream->CR &= ~DMA_SxCR_EN; // Disable DMA
@@ -225,7 +215,6 @@ void lcdRefresh(bool wait)
     WAIT_FOR_DMA_END();
 
     LCD_NCS_HIGH();
-    LCD_A0_HIGH();
   }
 #else
   // Wait if previous DMA transfer still active
@@ -235,7 +224,7 @@ void lcdRefresh(bool wait)
   lcdWriteAddress(0, 0);
 
   LCD_NCS_LOW();
-  LCD_A0_HIGH();
+
 
   LCD_DMA_Stream->CR &= ~DMA_SxCR_EN; // Disable DMA
   LCD_DMA->HIFCR = LCD_DMA_FLAGS; // Write ones to clear bits

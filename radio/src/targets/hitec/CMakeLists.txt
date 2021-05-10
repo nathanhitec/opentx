@@ -18,8 +18,6 @@ if(PCBREV STREQUAL GCSV2)
   set(LINKER_SCRIPT targets/hitec/stm32f4_flash.ld)
   add_definitions(-DSTM32F40_41xxx)
   
- 
-
   #hijacking x9e model definitions for now
   set(LUA_EXPORT lua_export_x9e) 
   set(FLAVOUR gcsv2)
@@ -121,6 +119,7 @@ set(TARGET_SRC
   trainer_driver.cpp
   pi_driver.cpp
   debug_driver.cpp
+  baro_driver.cpp
   ../common/arm/stm32/timers_driver.cpp
   ../common/arm/stm32/audio_dac_driver.cpp
   ../common/arm/stm32/adc_driver.cpp

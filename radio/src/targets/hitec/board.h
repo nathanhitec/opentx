@@ -675,6 +675,7 @@ void ledBlue();
 void lcdInit();
 void lcdInitFinish();
 void lcdOff();
+void baroInit();
 
 
 //used for x9e hijack, blank function defs

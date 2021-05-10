@@ -124,6 +124,7 @@ void boardInit()
 
   adcInit();
   lcdInit(); // delaysInit() must be called before
+  baroInit();
   audioInit();
   init2MhzTimer();
   init5msTimer();
