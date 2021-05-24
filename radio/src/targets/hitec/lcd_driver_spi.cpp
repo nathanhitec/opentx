@@ -89,10 +89,10 @@ void lcdHardwareInit()
 
   LCD_DMA_Stream->CR &= ~DMA_SxCR_EN; // Disable DMA
   LCD_DMA->HIFCR = LCD_DMA_FLAGS; // Write ones to clear bits
-  LCD_DMA_Stream->CR =  DMA_SxCR_PL_0 | DMA_SxCR_MINC | DMA_SxCR_DIR_0;
+  LCD_DMA_Stream->CR =  DMA_SxCR_PL_0 | DMA_SxCR_MINC | DMA_SxCR_DIR_0; //mem->perf, priority low, mem incredmented by byte after data transfer 
   LCD_DMA_Stream->PAR = (uint32_t)&LCD_SPI->DR;
 #if LCD_W == 128
-  LCD_DMA_Stream->NDTR = LCD_W;
+  LCD_DMA_Stream->NDTR = LCD_W; //amount of data to be transftered
 #else
   LCD_DMA_Stream->M0AR = (uint32_t)displayBuf;
   LCD_DMA_Stream->NDTR = LCD_W*LCD_H/8*4;
@@ -188,6 +188,8 @@ void lcdRefreshWait()
 }
 #endif
 
+//Refreshes in loop in boot.cpp
+//Refresh enables dma, int, waits for TX buffer to be empty then flushes display_buff to perif
 void lcdRefresh(bool wait)
 {
   if (!lcdInitFinished) {
@@ -240,6 +242,7 @@ void lcdRefresh(bool wait)
 #endif
 }
 
+//Triggered after DMA finished complete transfer, disables dma, int 
 extern "C" void LCD_DMA_Stream_IRQHandler()
 {
   DEBUG_INTERRUPT(INT_LCD);

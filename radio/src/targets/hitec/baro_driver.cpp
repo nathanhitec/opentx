@@ -84,7 +84,8 @@ uint16_t cmdADC(uint8_t cmd)
     return result;
 }
 
-void baroGetCompensatedPressure(BaroData *bd)
+//How frequently will this need to be ran?
+void baroGetData(BaroData *bd)
 {
     int32_t dT;
     int64_t OFF, SENS;
@@ -112,10 +113,10 @@ void baroHardwareInit()
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init(BARO_GPIO, &GPIO_InitStructure);
 
-    /*
+    
     BARO_DMA_Stream->CR &= ~DMA_SxCR_EN; // Disable DMA to set regs
     BARO_DMA->HIFCR = BARO_DMA_FLAGS; // Write ones to clear bits
-    BARO_DMA_Stream->CR = DMA_SxCR_PL_0 | DMA_SxCR_MINC | DMA_SxCR_DIR_0; //priority low, perf-mem, mem addr ptr incremeneted
+    BARO_DMA_Stream->CR = DMA_SxCR_PL_0 | DMA_SxCR_MINC | DMA_SxCR_DIR_2; //priority low, perf-mem, mem addr ptr incremeneted
     BARO_DMA_Stream->PAR = (uint32_t)&LCD_SPI->DR;
     //Num data items to transfer
     BARO_DMA_Stream->NDTR = 8;
@@ -125,7 +126,7 @@ void baroHardwareInit()
     BARO_DMA_Stream->CR |= DMA_SxCR_EN | DMA_SxCR_TCIE; // Enable DMA & TC interrupts
     LCD_SPI->CR2 |= SPI_CR2_RXDMAEN;
     NVIC_EnableIRQ(BARO_DMA_Stream_IRQn);
-    */
+    
 }
 
 
@@ -185,10 +186,7 @@ void baroInit(void)
     crc = crc4(coeffs);
 }
 
-
-
-//Uses CRC to check data validity
-bool isBaroUp()
+bool checkCRC()
 {
     return (crc && 0x0F) == (coeffs[7] && 0x0F);
 }

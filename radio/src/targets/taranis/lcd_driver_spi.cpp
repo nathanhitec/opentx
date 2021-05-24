@@ -244,6 +244,7 @@ void lcdRefresh(bool wait)
 #endif
 }
 
+//Triggered after DMA transfer is complete, disables interrupts, dma and waits for spi to completelty finish transmission
 extern "C" void LCD_DMA_Stream_IRQHandler()
 {
   DEBUG_INTERRUPT(INT_LCD);

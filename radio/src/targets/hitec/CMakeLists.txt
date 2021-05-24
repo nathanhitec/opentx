@@ -1,23 +1,12 @@
-option(SHUTDOWN_CONFIRMATION "Shutdown confirmation" OFF)
-option(LCD_DUAL_BUFFER "Dual LCD Buffer" OFF)
-option(PXX1 "PXX1 protocol support" OFF)
-option(PXX2 "PXX2 protocol support" OFF)
-option(AFHDS3 "AFHDS3 TX Module" OFF)
-option(GHOST "Ghost TX Module" OFF)
-option(INTERNAL_MODULE_PPM "Support for PPM internal module" OFF)
-option(AUTOUPDATE "Auto update internal chips from SD" OFF)
-option(BIND_KEY "Enable bind button" OFF)
 
 set(EXTERNAL_MODULE YES)
+
 
 if(PCBREV STREQUAL GCSV2)
   set(PWR_BUTTON SWITCH)
   set(STICKS STANDARD)
-  set(CPU_TYPE STM32F4)
-  set(CPU_TYPE_FULL STM32F407xE)
   set(LINKER_SCRIPT targets/hitec/stm32f4_flash.ld)
-  add_definitions(-DSTM32F40_41xxx)
-  
+
   #hijacking x9e model definitions for now
   set(LUA_EXPORT lua_export_x9e) 
   set(FLAVOUR gcsv2)
@@ -25,21 +14,17 @@ if(PCBREV STREQUAL GCSV2)
 
    #TODO: is this the correct eeporm variant?
   add_definitions(-DEEPROM_VARIANT=0x8000)
-
   add_definitions(-DPWR_BUTTON_${PWR_BUTTON})
 
-  set(FIRMWARE_TARGET_SRC
-    ${FIRMWARE_TARGET_SRC}
-    top_lcd_driver.cpp
-    startup_stm32f40_41xxx.s
-    )
+  #TODO: startup_stm32f40_41 might need to change
+ 
 
-  
   set(USB_CHARGER YES)
   
   #TODO: might need to change, nav type, gui_dir and bitmap targets
   set(GUI_DIR 212x64)
   set(NAVIGATION_TYPE x9d) 
+
   set(BITMAPS_TARGET taranis_bitmaps)
   set(FONTS_TARGET taranis_fonts)
 
@@ -48,11 +33,29 @@ if(PCBREV STREQUAL GCSV2)
   set(STATUS_LEDS YES)
   set(ROTARY_ENCODER YES)
 
-  #TODO: can add hitec def instead of frsky
-  add_definitions(-DMANUFACTURER_FRSKY)
+  add_definitions(-DMANUFACTURER_HITEC)
 
 else()
    message(FATAL_ERROR "Unknown PCBREV: '${PCBREV}' expecting GCSV2")
+endif()
+
+
+if(CPU_TYPE STREQUAL STM32F4)
+  add_definitions(-DSTM32F40_41xxx)
+  set(FIRMWARE_TARGET_SRC
+    ${FIRMWARE_TARGET_SRC}
+    top_lcd_driver.cpp
+    startup_stm32f40_41xxx.s
+    )
+elseif(CPU_TYPE STREQUAL STM32F2)
+  add_definitions(-DSTM32F42_43xxx)
+  set(FIRMWARE_TARGET_SRC
+    ${FIRMWARE_TARGET_SRC}
+    top_lcd_driver.cpp
+    startup_stm32f42_43xxx.s
+    )
+else()
+    message(FATAL_ERROR "Please provide CPU_TYPE of STM32F4 or STM32F2")
 endif()
 
 

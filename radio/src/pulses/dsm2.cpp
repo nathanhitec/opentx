@@ -24,115 +24,110 @@
 
 #include "opentx.h"
 
-// SRXL control bits
-#define SRXL_NORMAL_CHANS           16
+ // SRXL V1 control bits
+#define SRXL_NORMAL_CHANS           12
 
-#define SRXL_FRAME_SIZE             35
+#define SRXL_FRAME_SIZE             27
 
-// 16 channel v2 of protocol
-#define SRXL_FRAME_BEGIN_BYTE       0xA2
-
-
-//TODO: wat is chan center ??
-#define SRXL_CHAN_CENTER            992
+#define SRXL_FRAME_BEGIN_BYTE       0xA1
 
 #define BITLEN_SRXL                 (9*2) //115200 Baud , ~9us per bit, not sure why it's doubled
 
+#define SRXL_CHAN_CENTER            2048
 
-//PPM_PIN_SERIAL is not defined in current build, does an external reciver need to be on it to define this?
+//PPM_PIN_SERIAL is not defined in current build
 #if defined(PPM_PIN_SERIAL)
 void putDsm2SerialBit(uint8_t bit)
 {
-  extmodulePulsesData.dsm2.serialByte >>= 1;
-  if (bit & 1) {
-    extmodulePulsesData.dsm2.serialByte |= 0x80;
-  }
-  if (++extmodulePulsesData.dsm2.serialBitCount >= 8) {
-    *extmodulePulsesData.dsm2.ptr++ = extmodulePulsesData.dsm2.serialByte;
-    extmodulePulsesData.dsm2.serialBitCount = 0;
-  }
+    extmodulePulsesData.dsm2.serialByte >>= 1;
+    if (bit & 1) {
+        extmodulePulsesData.dsm2.serialByte |= 0x80;
+    }
+    if (++extmodulePulsesData.dsm2.serialBitCount >= 8) {
+        *extmodulePulsesData.dsm2.ptr++ = extmodulePulsesData.dsm2.serialByte;
+        extmodulePulsesData.dsm2.serialBitCount = 0;
+    }
 }
 
 void sendByteDsm2(uint8_t b)     // max 10changes 0 10 10 10 10 1
 {
-  putDsm2SerialBit(0);           // Start bit
-  for (uint8_t i=0; i<8; i++) {  // 8 data Bits
-    putDsm2SerialBit(b & 0x80);
-    b >>= 1;
-  }
+    putDsm2SerialBit(0);           // Start bit
+    for (uint8_t i = 0; i < 8; i++) {  // 8 data Bits
+        putDsm2SerialBit(b & 0x80);
+        b >>= 1;
+    }
 
-  putDsm2SerialBit(1);           // Stop bit
+    putDsm2SerialBit(1);           // Stop bit
 }
 
 void putDsm2Flush()
 {
-  for (int i=0; i<16; i++) {
-    putDsm2SerialBit(1);         // 16 extra stop bits
-  }
+    for (int i = 0; i < 16; i++) {
+        putDsm2SerialBit(1);         // 16 extra stop bits
+    }
 }
 #else
-    
+
 //This function is called when a bit transitions from low to high and vice versa
 //v is always a multiple of BITLEN_SRXL, 16, 32, 48, etc.
 //this v value essentially coincides with the pulse length, 1 bit has a pulse length of 16 not sure why it's not 8
-void _send_1(uint8_t v)
-  /* this looks doubious and in my logic analyzer
-     output the low->high is about 2 ns late */
+void _send_1(uint8_t v, bool stop_bit = false)
+/* this looks doubious and in my logic analyzer
+   output the low->high is about 2 ns late */
 {
-  //if (extmodulePulsesData.dsm2.index & 1)
-    //v += 2;
-  //else
-    //v -= 2;
 
-  *extmodulePulsesData.dsm2.ptr++ = v - 1;
-  extmodulePulsesData.dsm2.index += 1;
-}
+    if (extmodulePulsesData.dsm2.index & 1)
+        v += 2;
+    else
+        v -= 2;
 
-//TODO: bits are reversed in oscilloscope, is this correct?, 0xA2 looks like 0x45
-void sendByteDsm2(uint8_t b) // max 10 changes 0 10 10 10 10 1
-{
-  bool    lev = 0;
-  uint8_t len = BITLEN_SRXL; // max val: 8*16 < 256
-  for (uint8_t i=0; i<=8; i++) { // 8Bits + Stop=1
-    bool nlev = b & 1; // lsb first
-    if (lev == nlev) {
-      len += BITLEN_SRXL;
+    if (stop_bit) {
+        *extmodulePulsesData.dsm2.ptr++ = v + 2;
     }
     else {
-      _send_1(len); 
-      len  = BITLEN_SRXL;
-      lev  = nlev;
+        *extmodulePulsesData.dsm2.ptr++ = v - 1;
     }
-    b = (b>>1) | 80; // shift in stop bit
-  }
-  _send_1(len); // stop bit (len is already BITLEN_SRXL)
+    extmodulePulsesData.dsm2.index += 1;
+}
+
+void sendByteDsm2(uint8_t b) // max 10 changes 0 10 10 10 10 1
+{
+    bool    lev = 0;
+    uint8_t len = BITLEN_SRXL; // max val: 8*16 < 256
+    for (uint8_t i = 0; i <= 8; i++) { // 8Bits + Stop=1
+        bool nlev = b & 1; // lsb first
+        if (lev == nlev) {
+            len += BITLEN_SRXL;
+        }
+        else {
+            _send_1(len);
+            len = BITLEN_SRXL;
+            lev = nlev;
+        }
+        b = (b >> 1) | 0x80; // shift in stop bit
+    }
+    _send_1(len, true); // stop bit (len is already BITLEN_SRXL)
 }
 
 void putDsm2Flush()
 {
-  if (extmodulePulsesData.dsm2.index & 1)
-    *extmodulePulsesData.dsm2.ptr++ = 60000; //is this an arbitrarily large value? 
-  else
-    *(extmodulePulsesData.dsm2.ptr - 1) = 60000;
+    if (extmodulePulsesData.dsm2.index & 1)
+        *extmodulePulsesData.dsm2.ptr++ = 60000; //is this an arbitrarily large value? 
+    else
+        *(extmodulePulsesData.dsm2.ptr - 1) = 60000;
 }
 #endif
 
 
-static uint16_t srxlCrc16(uint8_t* packet)
+static uint16_t srxlCRC16(uint16_t crc, uint8_t packet)
 {
-    uint16_t crc = 0;                      //seeds with 0
-    uint8_t length = SRXL_FRAME_SIZE - 2;  //exclude 2 crc bytes at end of packet from length
-    
-    for(uint8_t i = 0; i < length; ++i)
+    crc = crc ^ ((uint16_t)packet << 8);
+    for (int b = 0; b < 8; b++)
     {
-        crc = crc ^ ((uint16_t)packet[i] << 8);
-        for(int b = 0; b < 8; b++)
-        {
-            if(crc & 8000)
-                crc = (crc << 1) ^ 0x1021;
-            else
-                crc = crc << 1;
-        }
+        if (crc & 0x8000)
+            crc = (crc << 1) ^ 0x1021;
+        else
+            crc = crc << 1;
     }
     return crc;
 }
@@ -142,39 +137,41 @@ static uint16_t srxlCrc16(uint8_t* packet)
 void setupPulsesDSM2()
 {
 #if defined(PPM_PIN_SERIAL)
-  extmodulePulsesData.dsm2.serialByte = 0 ;
-  extmodulePulsesData.dsm2.serialBitCount = 0 ;
+    extmodulePulsesData.dsm2.serialByte = 0;
+    extmodulePulsesData.dsm2.serialBitCount = 0;
 #else
-  extmodulePulsesData.dsm2.index = 0;
+    extmodulePulsesData.dsm2.index = 0;
 #endif
 
-  extmodulePulsesData.dsm2.ptr = extmodulePulsesData.dsm2.pulses;
-  
+    extmodulePulsesData.dsm2.ptr = extmodulePulsesData.dsm2.pulses;
 
-  uint8_t SRXLData[SRXL_FRAME_SIZE];
-  
-  // Start Byte
-  SRXLData[0] = SRXL_FRAME_BEGIN_BYTE;
-  for (int i=0; i<SRXL_NORMAL_CHANS; i++) {
-    int channel = g_model.moduleData[EXTERNAL_MODULE].channelsStart+i;
-    int value = channelOutputs[channel] + 2 * PPM_CH_CENTER(channel) - 2*PPM_CENTER;
-    
-    //TODO: Do I need to do anything with the value or does the reciver do the work to calculate the pwm_out value?
-    //in 4095 steps, 0x000 -> 0xFFF, pwm pulse 800us -> 2200us, do I need to center at 1500us?
- 
-    SRXLData[2*i+1] = ((value >> 8) & 0xff); //sends MSB first,
-    SRXLData[2*i+2] = (value & 0xff);
-  }
-  uint16_t crc = srxlCrc16(SRXLData);
-  
-  sendByteDsm2(SRXL_FRAME_BEGIN_BYTE);
-  
-  for(int i=0; i < SRXL_NORMAL_CHANS; i++){
-    sendByteDsm2(SRXLData[2*i+1]);
-    sendByteDsm2(SRXLData[2*i+2]);
-  }
-  sendByteDsm2(uint8_t((crc >> 8) & 0xff));
-  sendByteDsm2(uint8_t(crc & 0xff));
+    uint8_t SRXLData[SRXL_FRAME_SIZE];
+    int channel;
+    int value;
+    uint16_t pulse;
+    uint16_t crc = 0;
 
-  putDsm2Flush();
+    // Start Byte
+    SRXLData[0] = SRXL_FRAME_BEGIN_BYTE;
+    crc = srxlCRC16(crc, SRXLData[0]);
+
+    for (int i = 0; i < SRXL_NORMAL_CHANS; i++) {
+        value = channelOutputs[i] + SRXL_CHAN_CENTER;
+        pulse = limit(0, value, 4095);               //lower limit 0x000 upper limit 0xFFF
+        SRXLData[2 * i + 1] = ((pulse >> 8) & 0xff); //sends MSB first
+        SRXLData[2 * i + 2] = (pulse & 0xff);
+        crc = srxlCRC16(crc, SRXLData[2 * i + 1]);
+        crc = srxlCRC16(crc, SRXLData[2 * i + 2]);
+    }
+
+    sendByteDsm2(SRXL_FRAME_BEGIN_BYTE);
+
+    for (int i = 0; i < SRXL_NORMAL_CHANS; i++) {
+        sendByteDsm2(SRXLData[2 * i + 1]);
+        sendByteDsm2(SRXLData[2 * i + 2]);
+    }
+    sendByteDsm2(uint8_t((crc >> 8) & 0xff));
+    sendByteDsm2(uint8_t(crc & 0xff));
+
+    putDsm2Flush();
 }

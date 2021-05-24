@@ -183,28 +183,30 @@
   #define ADC_GPIO_PIN_POT3             GPIO_Pin_5  // PC.05
   #define ADC_GPIO_PIN_POT4             GPIO_Pin_4  // PC.04
 
-  #define ADC_GPIO_PIN_SLIDER1          GPIO_Pin_2 //  PC.02
-  #define ADC_GPIO_PIN_SLIDER2          GPIO_Pin_5  // PA.05
-  #define ADC_GPIO_PIN_SLIDER3          GPIO_Pin_6  // PA.06
-  #define ADC_GPIO_PIN_SLIDER4          GPIO_Pin_1  // PB.01
-
-  #define ADC_GPIO_PIN_BATT             GPIO_Pin_0  // PC.00
-
-  #define ADC_GPIOA_PINS                (ADC_GPIO_PIN_STICK_RV | ADC_GPIO_PIN_STICK_RH | ADC_GPIO_PIN_STICK_LH | ADC_GPIO_PIN_STICK_LV | ADC_GPIO_PIN_SLIDER3 | ADC_GPIO_PIN_SLIDER2)
-  #define ADC_GPIOB_PINS                (ADC_GPIO_PIN_POT2 | ADC_GPIO_PIN_SLIDER4)
-  #define ADC_GPIOC_PINS                (ADC_GPIO_PIN_POT1 | ADC_GPIO_PIN_POT3 | ADC_GPIO_PIN_POT4 | ADC_GPIO_PIN_SLIDER1 | ADC_GPIO_PIN_BATT)
-
   #define ADC_CHANNEL_POT1              ADC_Channel_13  // ADC3_IN13
   #define ADC_CHANNEL_POT2              ADC_Channel_8  // ADC1_IN8
   #define ADC_CHANNEL_POT3              ADC_Channel_15 // ADC1_IN15
   #define ADC_CHANNEL_POT4              ADC_Channel_14 // ADC1_IN14
+
+
+  #define ADC_GPIO_PIN_SLIDER1          GPIO_Pin_2 //  PC.02
+  #define ADC_GPIO_PIN_SLIDER2          GPIO_Pin_5  // PA.05
+  #define ADC_GPIO_PIN_SLIDER3          GPIO_Pin_6  // PA.06
+  #define ADC_GPIO_PIN_SLIDER4          GPIO_Pin_1  // PB.01
 
   #define ADC_CHANNEL_SLIDER1           ADC_Channel_12 // ADC3_IN12
   #define ADC_CHANNEL_SLIDER2           ADC_Channel_5  // ADC1_IN5
   #define ADC_CHANNEL_SLIDER3           ADC_Channel_6  // ADC1_IN6
   #define ADC_CHANNEL_SLIDER4           ADC_Channel_9  // ADC1_IN9
 
+  #define ADC_GPIO_PIN_BATT             GPIO_Pin_0  // PC.00
   #define ADC_CHANNEL_BATT              ADC_Channel_10 // ADC1_IN10
+
+
+  #define ADC_GPIOA_PINS                (ADC_GPIO_PIN_STICK_RV | ADC_GPIO_PIN_STICK_RH | ADC_GPIO_PIN_STICK_LH | ADC_GPIO_PIN_STICK_LV | ADC_GPIO_PIN_SLIDER3 | ADC_GPIO_PIN_SLIDER2)
+  #define ADC_GPIOB_PINS                (ADC_GPIO_PIN_POT2 | ADC_GPIO_PIN_SLIDER4)
+  #define ADC_GPIOC_PINS                (ADC_GPIO_PIN_POT1 | ADC_GPIO_PIN_POT3 | ADC_GPIO_PIN_POT4 | ADC_GPIO_PIN_SLIDER1 | ADC_GPIO_PIN_BATT)
+
 
   #define ADC_EXT                       ADC3
   #define ADC_EXT_DMA                   DMA2
@@ -465,10 +467,11 @@
   #define I2C_WP_GPIO_PIN               GPIO_Pin_7  // PB.07
   #define I2C_SCL_GPIO_PinSource        GPIO_PinSource8
   #define I2C_SDA_GPIO_PinSource        GPIO_PinSource9
-  #define I2C_ADDRESS_VOLUME            0x5C
+  #define I2C_ADDRESS_VOLUME            0x5C //Used for volume control, do we need it?
 #endif
 #define I2C_SPEED                       400000
-#define I2C_ADDRESS_EEPROM              0xA2
+#define I2C_ADDRESS_EEPROM              0xA7
+//#define I2C_ADDRESS_EEPROM            0xA2
 #define I2C_FLASH_PAGESIZE              64
 
 
