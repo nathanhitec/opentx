@@ -1131,10 +1131,6 @@
   #define TR_ABOUT_HARDWARE_1          "JumperRC"
   #define TR_ABOUT_HARDWARE_2          TR("Hardware design/producer", "Hardware designer/producer")
   #define TR_ABOUT_HARDWARE_3          "Firmware contributor"
-#elif defined(MANUFACTURER_HITEC)
-  #defined TR_ABOUT_HARDWARE_1         "Hitec"
-  #defined TR_ABOUT_HARDWARE_2         "Jeff Wurzbach"
-  #defined TR_ABOUT_HARDWARE_3         "Nathan Costa"
 #else
   #define TR_ABOUT_HARDWARE_1          "Brent Nelson"
   #define TR_ABOUT_HARDWARE_2          "Sky9x designer/producer"

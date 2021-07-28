@@ -316,12 +316,12 @@ void generalDefault()
     g_eeGeneral.trainer.mix[i].studWeight = 100;
   }
 
-  /*
+  
 #if defined(PCBX9E)
   const int8_t defaultName[] = { 20, -1, -18, -1, -14, -9, -19 };
   memcpy(g_eeGeneral.bluetoothName, defaultName, sizeof(defaultName));
 #endif
-*/
+
 
 #if !defined(EEPROM)
   strcpy(g_eeGeneral.currModelFilename, DEFAULT_MODEL_FILENAME);
@@ -1902,21 +1902,24 @@ void moveTrimsToOffsets() // copy state of 3 primary to subtrim
 void opentxInit()
 {
   TRACE("opentxInit");
-
+ 
 #if defined(GUI)
   menuHandlers[0] = menuMainView;
   #if MENUS_LOCK != 2/*no menus*/
     menuHandlers[1] = menuModelSelect;
   #endif
 #endif
-
+    
+    
 #if defined(EEPROM)
   bool radioSettingsValid = storageReadRadioSettings(false);
 #endif
 
+    bool radioSettingsValid = true;
   BACKLIGHT_ENABLE(); // we start the backlight during the startup animation
 
 #if defined(STARTUP_ANIMATION)
+  
   if (WAS_RESET_BY_WATCHDOG_OR_SOFTWARE()) {
     pwrOn();
   }
@@ -1924,6 +1927,7 @@ void opentxInit()
     runStartupAnimation();
   }
 #else // defined(PWR_BUTTON_PRESS)
+  
   pwrOn();
 #endif
 
@@ -1942,6 +1946,7 @@ void opentxInit()
   SET_POWER_REASON(0);
 #endif
 
+  
 #if defined(SDCARD)
   // SDCARD related stuff, only done if not unexpectedShutdown
   if (!globalData.unexpectedShutdown) {
@@ -1972,7 +1977,8 @@ void opentxInit()
     logsInit();
   }
 #endif
-
+*/
+  
 #if defined(EEPROM)
   if (!radioSettingsValid)
     storageReadRadioSettings();
@@ -2054,7 +2060,7 @@ void opentxInit()
     // on Tx start turn the light on
     resetBacklightTimeout();
   }
-
+  
   if (!globalData.unexpectedShutdown) {
     opentxStart();
   }

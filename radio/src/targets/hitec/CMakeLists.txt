@@ -1,11 +1,11 @@
 
 set(EXTERNAL_MODULE YES)
+set(SPLASH DEFAULT)
 
-
+option(LCD_DUAL_BUFFER "Dual LCD Buffer" OFF)
 if(PCBREV STREQUAL GCSV2)
   set(PWR_BUTTON SWITCH)
   set(STICKS STANDARD)
-  set(LINKER_SCRIPT targets/hitec/stm32f4_flash.ld)
 
   #hijacking x9e model definitions for now
   set(LUA_EXPORT lua_export_x9e) 
@@ -16,12 +16,11 @@ if(PCBREV STREQUAL GCSV2)
   add_definitions(-DEEPROM_VARIANT=0x8000)
   add_definitions(-DPWR_BUTTON_${PWR_BUTTON})
 
-  #TODO: startup_stm32f40_41 might need to change
+  
+  set(CPU_TYPE_FULL "STM32F407xE" CACHE STRING "CPU Type (STM32F407xE/STM32F27xE)")
+  set(USB_CHARGER YES)
  
 
-  set(USB_CHARGER YES)
-  
-  #TODO: might need to change, nav type, gui_dir and bitmap targets
   set(GUI_DIR 212x64)
   set(NAVIGATION_TYPE x9d) 
 
@@ -32,7 +31,6 @@ if(PCBREV STREQUAL GCSV2)
   set(GVAR_SCREEN model_gvars.cpp)
   set(STATUS_LEDS YES)
   set(ROTARY_ENCODER YES)
-
   add_definitions(-DMANUFACTURER_HITEC)
 
 else()
@@ -40,22 +38,24 @@ else()
 endif()
 
 
-if(CPU_TYPE STREQUAL STM32F4)
+if(CPU_TYPE_FULL STREQUAL STM32F407xE)
   add_definitions(-DSTM32F40_41xxx)
+  set(LINKER_SCRIPT targets/hitec/stm32f407_flash.ld)
   set(FIRMWARE_TARGET_SRC
     ${FIRMWARE_TARGET_SRC}
     top_lcd_driver.cpp
     startup_stm32f40_41xxx.s
     )
-elseif(CPU_TYPE STREQUAL STM32F2)
+elseif(CPU_TYPE_FULL STREQUAL STM32F427xE)
   add_definitions(-DSTM32F42_43xxx)
+  set(LINKER_SCRIPT targets/hitec/stm32f427_flash.ld)
   set(FIRMWARE_TARGET_SRC
     ${FIRMWARE_TARGET_SRC}
     top_lcd_driver.cpp
     startup_stm32f42_43xxx.s
     )
 else()
-    message(FATAL_ERROR "Please provide CPU_TYPE of STM32F4 or STM32F2")
+    message(FATAL_ERROR "Please provide CPU_TYPE_FULL of STM32F407xE or STM32F427xE")
 endif()
 
 
@@ -71,27 +71,24 @@ if(USB_CHARGER)
   add_definitions(-DUSB_CHARGER)
 endif()
 
-
-
 set(HSE_VALUE 12000000)
 set(SDCARD YES)
 set(EEPROM EEPROM_RLC)
 set(TARGET_DIR hitec)
 set(PPM_LIMITS_SYMETRICAL YES)
 
-if(SPLASH STREQUAL OFF)
-  message(FATAL_ERROR "Option SPLASH=OFF not supported on hitec")
-endif()
 
 add_definitions(-DPCBTARANIS)
 add_definitions(-DAUDIO -DVOICE -DRTCLOCK)
 add_definitions(-DSBUS_TRAINER)
+
 
 set(SRC
   ${SRC}
   io/frsky_firmware_update.cpp
   io/multi_firmware_update.cpp
   )
+
 
 set(GUI_SRC
   ${GUI_SRC}
@@ -106,6 +103,7 @@ set(GUI_SRC
   bmp.cpp
   )
 
+
 if(STATUS_LEDS)
   set(LED_DRIVER led_driver.cpp)
 endif()
@@ -115,6 +113,7 @@ set(SRC
   sbus.cpp
   )
 
+
 set(TARGET_SRC
   ${TARGET_SRC}
   ${LED_DRIVER}
@@ -122,7 +121,6 @@ set(TARGET_SRC
   trainer_driver.cpp
   pi_driver.cpp
   debug_driver.cpp
-  baro_driver.cpp
   ../common/arm/stm32/timers_driver.cpp
   ../common/arm/stm32/audio_dac_driver.cpp
   ../common/arm/stm32/adc_driver.cpp

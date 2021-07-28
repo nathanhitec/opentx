@@ -181,7 +181,7 @@ void getSwitchesPosition(bool startup)
 #endif
 
 #if defined(PCBX9E)
-  CHECK_3POS(6, SW_SI);
+  CHECK_2POS(SW_SI);
   /*
   CHECK_3POS(7, SW_SJ);
   CHECK_3POS(8, SW_SK);

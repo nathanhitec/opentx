@@ -4,6 +4,7 @@ ModuleFifo debugeFifo;
 
 void debugHardwareInit()
 {
+    /*
     GPIO_InitTypeDef GPIO_InitStructure;
     //TODO: figure out correct settings for the pins
     GPIO_InitStructure.GPIO_Pin = DEBUG_SWDIO_GPIO_PIN;
@@ -18,7 +19,7 @@ void debugHardwareInit()
     
     GPIO_PinAFConfig(DEBUG_GPIO, DEBUG_SWDIO_GPIO_PIN_SOURCE, GPIO_AF_SWJ);
     GPIO_PinAFConfig(DEBUG_GPIO, DEBUG_SWDCLK_GPIO_PIN_SOURCE, GPIO_AF_SWJ);
-
+    */
 
 
 

@@ -113,7 +113,7 @@ void baroHardwareInit()
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init(BARO_GPIO, &GPIO_InitStructure);
 
-    
+    /*
     BARO_DMA_Stream->CR &= ~DMA_SxCR_EN; // Disable DMA to set regs
     BARO_DMA->HIFCR = BARO_DMA_FLAGS; // Write ones to clear bits
     BARO_DMA_Stream->CR = DMA_SxCR_PL_0 | DMA_SxCR_MINC | DMA_SxCR_DIR_2; //priority low, perf-mem, mem addr ptr incremeneted
@@ -126,7 +126,7 @@ void baroHardwareInit()
     BARO_DMA_Stream->CR |= DMA_SxCR_EN | DMA_SxCR_TCIE; // Enable DMA & TC interrupts
     LCD_SPI->CR2 |= SPI_CR2_RXDMAEN;
     NVIC_EnableIRQ(BARO_DMA_Stream_IRQn);
-    
+    */
 }
 
 

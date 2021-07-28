@@ -124,7 +124,6 @@ void boardInit()
 
   adcInit();
   lcdInit(); // delaysInit() must be called before
-  baroInit();
   audioInit();
   init2MhzTimer();
   init5msTimer();
@@ -184,7 +183,7 @@ void boardOff()
   lcdOff();
   SysTick->CTRL = 0; // turn off systick
   pwrOff();
-
+  //pwrOn();
   // disable interrupts
   __disable_irq();
 

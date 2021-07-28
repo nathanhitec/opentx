@@ -1,7 +1,7 @@
 /*
 *****************************************************************************
 **
-**  File        : stm32f4_flash.ld
+**  File        : stm32f427_flash.ld
 **
 **  Abstract    : Linker script for STM32F439 Device with
 **                2MByte FLASH, 192KByte SRAM, 64KByte CCM
@@ -20,7 +20,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = 0x20030000;    /* end of 192K RAM */
+_estack = 0x10010000;    /* end of 64K CCM */
 _heap_end = 0xD0800000;  /* end of 8192K SDRAM */
 
 /* Generate a link error if heap and stack don't fit into RAM */
@@ -48,11 +48,17 @@ SECTIONS
   /* The program code and other data goes into FLASH */
   .text :
   {
+    FILL(0xFFFF)
+      
+    CREATE_OBJECT_SYMBOLS
+  
+    KEEP(*(.bootloader)) /* Bootloader code */
+
+    . = 0x20000;         /* Set the start of the main program */
+    _stext = .;          /* Provide the name for the start of this section */
     . = ALIGN(4);
     KEEP(*(.isr_vector)) /* Startup code */
-    KEEP(*(.version))
-    KEEP(*(.bootversiondata))
-    . = ALIGN(4);      /* Align the start of the text part */
+    KEEP(*(.fwversiondata))
     *(.text)           /* .text sections (code) */
     *(.text*)          /* .text* sections (code) */
     *(.rodata)         /* .rodata sections (constants, strings, etc.) */

@@ -392,8 +392,7 @@ enum Analogs {
 #define STORAGE_NUM_MOUSE_ANALOGS     0
 
 #define NUM_TRIMS                     4
-#define NUM_TRIM_KEYS                 0
-#define NUM_TRIMS_KEYS                0
+#define NUM_TRIMS_KEYS                4
 
 
 #define STICKS_PWM_ENABLED()          false
@@ -407,8 +406,8 @@ PACK(typedef struct {
 extern HardwareOptions hardwareOptions;
 
 
-  #define IS_PXX2_INTERNAL_ENABLED()            (false
-  #define IS_PXX1_INTERNAL_ENABLED()            (false
+  #define IS_PXX2_INTERNAL_ENABLED()            (false)
+  #define IS_PXX1_INTERNAL_ENABLED()            (false)
 
 
 enum CalibratedAnalogs {
@@ -425,7 +424,7 @@ enum CalibratedAnalogs {
 
 
 #define IS_POT(x)                     ((x)>=POT_FIRST && (x)<=POT_LAST)
-#define IS_SLIDER(x)                    ((x)>POT_LAST && (x)<TX_VOLTAGE)
+#define IS_SLIDER(x)                  ((x)>POT_LAST && (x)<TX_VOLTAGE)
 
 extern uint16_t adcValues[NUM_ANALOGS];
 
@@ -644,33 +643,14 @@ void ledGreen();
 void ledBlue();
 
 // LCD driver
-//TODO: might need to change some of these values depending on lcd
-#if defined(PCBX9D) || defined(PCBX9DP) || defined(PCBX9E)
 #define LCD_W                           212
 #define LCD_H                           64
 #define LCD_DEPTH                       4
 #define LCD_CONTRAST_MIN                0
 #define LCD_CONTRAST_MAX                45
 #define LCD_CONTRAST_DEFAULT            25
-#else
-#define LCD_W                           128
-#define LCD_H                           64
-#define LCD_DEPTH                       1
-#define IS_LCD_RESET_NEEDED()           true
-#define LCD_CONTRAST_MIN                10
-#define LCD_CONTRAST_MAX                30
-#if defined(RADIO_TX12) || defined(RADIO_FAMILY_JUMPER_T12)
-  #define LCD_CONTRAST_DEFAULT          25
-#else
-  #define LCD_CONTRAST_DEFAULT          15
-#endif
-#endif
-
-#if defined(PCBX9D) || defined(PCBX9E) || (defined(PCBX9DP) && PCBREV < 2019)
 #define IS_LCD_RESET_NEEDED()           (!WAS_RESET_BY_WATCHDOG_OR_SOFTWARE())
-#else
-#define IS_LCD_RESET_NEEDED()           true
-#endif
+
 
 void lcdInit();
 void lcdInitFinish();
@@ -722,25 +702,12 @@ void setTopBatteryValue(uint32_t volts);
 #include "fifo.h"
 #include "dmafifo.h"
 
-#if defined(CROSSFIRE)
-#define TELEMETRY_FIFO_SIZE             128
-#else
 #define TELEMETRY_FIFO_SIZE             64
-#endif
 
 extern Fifo<uint8_t, TELEMETRY_FIFO_SIZE> telemetryFifo;
 typedef DMAFifo<32> AuxSerialRxFifo;
 extern AuxSerialRxFifo auxSerialRxFifo;
 #endif
 
-// Gyro driver
-#define GYRO_VALUES_COUNT               6
-#define GYRO_BUFFER_LENGTH              (GYRO_VALUES_COUNT * sizeof(int16_t))
-int gyroInit();
-int gyroRead(uint8_t buffer[GYRO_BUFFER_LENGTH]);
-#define GYRO_MAX_DEFAULT                30
-#define GYRO_MAX_RANGE                  60
-#define GYRO_OFFSET_MIN                 -30
-#define GYRO_OFFSET_MAX                 10
 
 #endif // _BOARD_H_

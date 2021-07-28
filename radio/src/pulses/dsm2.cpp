@@ -21,6 +21,7 @@
 
 
 
+//SRXL HIJACK OF DSM2
 
 #include "opentx.h"
 
@@ -68,9 +69,7 @@ void putDsm2Flush()
 }
 #else
 
-//This function is called when a bit transitions from low to high and vice versa
-//v is always a multiple of BITLEN_SRXL, 16, 32, 48, etc.
-//this v value essentially coincides with the pulse length, 1 bit has a pulse length of 16 not sure why it's not 8
+
 void _send_1(uint8_t v, bool stop_bit = false)
 /* this looks doubious and in my logic analyzer
    output the low->high is about 2 ns late */

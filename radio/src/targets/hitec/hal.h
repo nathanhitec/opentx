@@ -286,18 +286,13 @@
 
 
 
-//SWD debug
+//PI debug
+//Do I need to configure swd pins for alternative functions
 #if defined(GCSV2)
-#define DEBUG_GPIO                     GPIOA
-#define DEBUG_SWDIO_GPIO_PIN_SOURCE    GPIO_PinSource13
-#define DEBUG_SWDCLK_GPIO_PIN_SOURCE   GPIO_PinSource14
-#define DEBUG_SWDIO_GPIO_PIN           GPIO_Pin_13 //PA.13
-#define DEBUG_SWDCLK_GPIO_PIN          GPIO_Pin_14 //PA.14
 //add support for pi debugging here, configure UART, simple serial interface for debug prints? 
 #endif
 
 
-//TODO: do I need to configure external clocks?, XTAL1, XTAL2, what clocks to use for perifs? 
 
 
 //PI UART placeholder
@@ -425,8 +420,11 @@
   #define LCD_MOSI_GPIO_PinSource       GPIO_PinSource12
   #define LCD_CLK_GPIO_PIN              GPIO_Pin_10 // PC.10
   #define LCD_CLK_GPIO_PinSource        GPIO_PinSource10
-  #define LCD_MISO_GPIO_PIN             GPIO_Pin_11 // PC.11 Assumed to be MISO in BARO?
-  #define LCD_MISO_GPIO_PinSource       GPIO_PinSource11
+
+  #define LCD_A0_GPIO                   GPIOC
+  #define LCD_A0_GPIO_PIN               GPIO_Pin_11
+  #define LCD_A0_GPIO_PinSource         GPIO_PinSource11
+
   #define LCD_NCS_GPIO                  GPIOA
   #define LCD_NCS_GPIO_PIN              GPIO_Pin_15 // PA.15
   #define LCD_RST_GPIO                  GPIOD
@@ -440,8 +438,11 @@
   #define LCD_SPI                       SPI3
   #define LCD_GPIO_AF                   GPIO_AF_SPI3
 
-  #define BARO_GPIO                      GPIOE
-  #define BARO_GPIO_CS_PIN               GPIO_Pin_1  
+//  #define BARO_GPIO                      GPIOE
+//  #define BARO_GPIO_CS_PIN               GPIO_Pin_1  
+//  #define BARO_MISO_GPIO_PIN             GPIO_Pin_11 // PC.11 uses LCD_SPI_GPIO not BARO_GPIO
+//  #define BARO_MISO_GPIO_PinSource       GPIO_PinSource11
+
 /*
   #define BARO_DMA                       DMA1
   #define BARO_DMA_Stream                DMA1_Stream0

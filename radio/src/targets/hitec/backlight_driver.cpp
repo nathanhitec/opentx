@@ -20,6 +20,7 @@
 
 #include "opentx.h"
 
+//TODO: might need to change This is for x9e backlight
 #if !defined(BACKLIGHT_GPIO)
  // no backlight
 void backlightInit() {}
