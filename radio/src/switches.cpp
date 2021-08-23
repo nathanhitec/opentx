@@ -132,9 +132,9 @@ void getSwitchesPosition(bool startup)
   CHECK_3POS(0, SW_SB);
   CHECK_3POS(1, SW_SC);
 #else
-  CHECK_3POS(0, SW_SA);
-  CHECK_3POS(1, SW_SB);
-  CHECK_3POS(2, SW_SC);
+  CHECK_2POS(SW_SA);
+  CHECK_3POS(0, SW_SB);
+  CHECK_3POS(1, SW_SC);
 #endif
 
 #if defined(PCBX9LITES)
@@ -162,11 +162,8 @@ void getSwitchesPosition(bool startup)
   CHECK_2POS(SW_SF);
   CHECK_2POS(SW_SH);
 #else
-  CHECK_3POS(3, SW_SD);
-  CHECK_3POS(4, SW_SE);
-  //CHECK_2POS(SW_SF);
-  CHECK_3POS(5, SW_SG);
-  CHECK_2POS(SW_SH);
+  CHECK_2POS(SW_SD);
+  CHECK_2POS(SW_SE);
 #endif
 
 #if defined(RADIO_X9DP2019)
@@ -180,20 +177,6 @@ void getSwitchesPosition(bool startup)
   CHECK_2POS(SW_SJ);
 #endif
 
-#if defined(PCBX9E)
-  CHECK_2POS(SW_SI);
-  /*
-  CHECK_3POS(7, SW_SJ);
-  CHECK_3POS(8, SW_SK);
-  CHECK_3POS(9, SW_SL);
-  CHECK_3POS(10, SW_SM);
-  CHECK_3POS(11, SW_SN);
-  CHECK_3POS(12, SW_SO);
-  CHECK_3POS(13, SW_SP);
-  CHECK_3POS(14, SW_SQ);
-  CHECK_3POS(15, SW_SR);
-  */
-#endif
 
   switchesPos = newPos;
 

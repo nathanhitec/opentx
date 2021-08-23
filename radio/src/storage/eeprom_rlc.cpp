@@ -182,7 +182,7 @@ void storageFormat()
 bool eepromOpen()
 {
   eepromReadBlock((uint8_t *)&eeFs, 0, sizeof(eeFs));
-
+ 
 #if defined(SIMU)
   if (eeFs.version != EEFS_VERS) {
     TRACE("bad eeFs.version (%d instead of %d)", eeFs.version, EEFS_VERS);
@@ -192,10 +192,11 @@ bool eepromOpen()
   }
 #endif
 
+  
   if (eeFs.version != EEFS_VERS || eeFs.mySize != sizeof(eeFs)) {
     return false;
   }
-
+  
   eepromCheck();
   return true;
 }
@@ -759,65 +760,65 @@ uint16_t eeLoadModelData(uint8_t index)
 
 bool eeLoadGeneral(bool allowFixes)
 {
-  theFile.openRlc(FILE_GENERAL);
-  if (theFile.readRlc((uint8_t*)&g_eeGeneral, 3) == 3 && g_eeGeneral.version == EEPROM_VER) {
     theFile.openRlc(FILE_GENERAL);
-    if (theFile.readRlc((uint8_t*)&g_eeGeneral, sizeof(g_eeGeneral)) <= sizeof(g_eeGeneral) && g_eeGeneral.variant == EEPROM_VARIANT) {
-      return true;
+    if (theFile.readRlc((uint8_t*)&g_eeGeneral, 3) == 3 && g_eeGeneral.version == EEPROM_VER) {
+        theFile.openRlc(FILE_GENERAL);
+        if (theFile.readRlc((uint8_t*)&g_eeGeneral, sizeof(g_eeGeneral)) <= sizeof(g_eeGeneral) && g_eeGeneral.variant == EEPROM_VARIANT) {
+            return true;
+        }
     }
-  }
 
 #if defined(PCBX7)
-  if (g_eeGeneral.variant == 0) {
-    TRACE("Pre release EEPROM detected, variant %d instead of %d for X7 radio. Loading anyway", g_eeGeneral.variant, EEPROM_VARIANT);
-    g_eeGeneral.variant = EEPROM_VARIANT;
-    storageDirty(EE_GENERAL);
-    return true;
-  }
+    if (g_eeGeneral.variant == 0) {
+        TRACE("Pre release EEPROM detected, variant %d instead of %d for X7 radio. Loading anyway", g_eeGeneral.variant, EEPROM_VARIANT);
+        g_eeGeneral.variant = EEPROM_VARIANT;
+        storageDirty(EE_GENERAL);
+        return true;
+    }
 #endif
 
 #if defined(PCBX9LITES)
-  if (g_eeGeneral.variant == 0x0800) {
-    TRACE("Pre release EEPROM detected, variant %d instead of %d for X9LiteS radio. Loading anyway", g_eeGeneral.variant, EEPROM_VARIANT);
-    g_eeGeneral.variant = EEPROM_VARIANT;
-    storageDirty(EE_GENERAL);
-    return true;
-  }
+    if (g_eeGeneral.variant == 0x0800) {
+        TRACE("Pre release EEPROM detected, variant %d instead of %d for X9LiteS radio. Loading anyway", g_eeGeneral.variant, EEPROM_VARIANT);
+        g_eeGeneral.variant = EEPROM_VARIANT;
+        storageDirty(EE_GENERAL);
+        return true;
+    }
 #endif
 
 #if defined(RADIO_T12)
-  if (g_eeGeneral.variant != (EEPROM_VARIANT & 0xFFFE)) {
-    TRACE("EEPROM variant %d instead of %d", g_eeGeneral.variant, EEPROM_VARIANT);
-    return false;
-  }
-  else if (g_eeGeneral.variant != EEPROM_VARIANT && g_eeGeneral.version ==  218) {
-    TRACE("V218 T12/X7 detected, allowing use", g_eeGeneral.variant, EEPROM_VARIANT); // Production firmware use v218 X7 variant
-  }
-  else {
-    TRACE("EEPROM variant %d instead of %d", g_eeGeneral.variant, EEPROM_VARIANT);
-    return false;
-  }
+    if (g_eeGeneral.variant != (EEPROM_VARIANT & 0xFFFE)) {
+        TRACE("EEPROM variant %d instead of %d", g_eeGeneral.variant, EEPROM_VARIANT);
+        return false;
+    }
+    else if (g_eeGeneral.variant != EEPROM_VARIANT && g_eeGeneral.version == 218) {
+        TRACE("V218 T12/X7 detected, allowing use", g_eeGeneral.variant, EEPROM_VARIANT); // Production firmware use v218 X7 variant
+    }
+    else {
+        TRACE("EEPROM variant %d instead of %d", g_eeGeneral.variant, EEPROM_VARIANT);
+        return false;
+    }
 #elif defined(PCBTARANIS)
-  if (g_eeGeneral.variant != EEPROM_VARIANT) {
-    TRACE("EEPROM variant %d instead of %d", g_eeGeneral.variant, EEPROM_VARIANT);
-    return false;
-  }
+    if (g_eeGeneral.variant != EEPROM_VARIANT) {
+        TRACE("EEPROM variant %d instead of %d", g_eeGeneral.variant, EEPROM_VARIANT);
+        return false;
+    }
 #endif
 
 #if defined(EEPROM_CONVERSIONS)
-  if (g_eeGeneral.version != EEPROM_VER) {
-    TRACE("EEPROM version %d instead of %d", g_eeGeneral.version, EEPROM_VER);
-    if (!allowFixes)
-      return false; // prevent eeprom from being wiped
-    if (!eeConvert())
-      return false;
-  }
-  return true;
+    if (g_eeGeneral.version != EEPROM_VER) {
+        TRACE("EEPROM version %d instead of %d", g_eeGeneral.version, EEPROM_VER);
+        if (!allowFixes)
+            return false; // prevent eeprom from being wiped
+        if (!eeConvert())
+            return false;
+    }
+    return true;
 #else
-  TRACE("EEPROM version %d (%d) instead of %d (%d)", g_eeGeneral.version, g_eeGeneral.variant, EEPROM_VER, EEPROM_VARIANT);
-  return false;
+    TRACE("EEPROM version %d (%d) instead of %d (%d)", g_eeGeneral.version, g_eeGeneral.variant, EEPROM_VER, EEPROM_VARIANT);
+    return false;
 #endif
-}
+    }
 
 void eeLoadModelName(uint8_t id, char *name)
 {

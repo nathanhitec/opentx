@@ -174,14 +174,11 @@ uint32_t switchState(uint8_t index)
   uint32_t xxx = 0;
 
   switch (index) {
-      ADD_3POS_CASE(A, 0);
+      ADD_2POS_CASE(A);
       ADD_3POS_CASE(B, 1);
       ADD_3POS_CASE(C, 2);
-      ADD_3POS_CASE(D, 3);
-      ADD_3POS_CASE(E, 4);
-      ADD_3POS_CASE(G, 6);
-      ADD_2POS_CASE(H);
-      ADD_2POS_CASE(I);
+      ADD_2POS_CASE(D);
+      ADD_2POS_CASE(E);
 
     default:
       break;

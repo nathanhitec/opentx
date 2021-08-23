@@ -1814,6 +1814,8 @@ const luaR_value_entry opentxConstants[] = {
   { "MIXSRC_SD", MIXSRC_SD },
 #if !defined(PCBX7) && !defined(PCBXLITE) && !defined(PCBX9LITE)
   { "MIXSRC_SE", MIXSRC_SE },
+#endif
+#if defined(HARDWARE_SWITCH_G)
   { "MIXSRC_SG", MIXSRC_SG },
 #endif
 #if defined(HARDWARE_SWITCH_F)

@@ -1962,7 +1962,7 @@
   #define I2C_ADDRESS_VOLUME            0x5C
 #endif
 #define I2C_SPEED                       400000
-#define I2C_ADDRESS_EEPROM              0xA2
+#define I2C_ADDRESS_EEPROM              0xA0
 #define I2C_FLASH_PAGESIZE              64
 
 // Second I2C Bus: IMU

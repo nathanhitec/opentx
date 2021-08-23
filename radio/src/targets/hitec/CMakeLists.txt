@@ -1,8 +1,14 @@
 
 set(EXTERNAL_MODULE YES)
 set(SPLASH DEFAULT)
-
+option(AUTOUPDATE "Auto update internal chips from SD" OFF)
+option(PXX1 "PXX1 protocol support" OFF)
+option(PXX2 "PXX2 protocol support" OFF)
+option(AFHDS3 "AFHDS3 TX Module" OFF)
+option(GHOST "Ghost TX Module" OFF)
+option(INTERNAL_MODULE_PPM "Support for PPM internal module" OFF)
 option(LCD_DUAL_BUFFER "Dual LCD Buffer" OFF)
+
 if(PCBREV STREQUAL GCSV2)
   set(PWR_BUTTON SWITCH)
   set(STICKS STANDARD)
@@ -11,7 +17,7 @@ if(PCBREV STREQUAL GCSV2)
   set(LUA_EXPORT lua_export_x9e) 
   set(FLAVOUR gcsv2)
   add_definitions(-DPCBX9E -DPCBX9 -DGCSV2)
-
+ 
    #TODO: is this the correct eeporm variant?
   add_definitions(-DEEPROM_VARIANT=0x8000)
   add_definitions(-DPWR_BUTTON_${PWR_BUTTON})
@@ -30,6 +36,8 @@ if(PCBREV STREQUAL GCSV2)
   set(LCD_DRIVER lcd_driver_spi.cpp)
   set(GVAR_SCREEN model_gvars.cpp)
   set(STATUS_LEDS YES)
+  
+
   set(ROTARY_ENCODER YES)
   add_definitions(-DMANUFACTURER_HITEC)
 
@@ -47,7 +55,7 @@ if(CPU_TYPE_FULL STREQUAL STM32F407xE)
     startup_stm32f40_41xxx.s
     )
 elseif(CPU_TYPE_FULL STREQUAL STM32F427xE)
-  add_definitions(-DSTM32F42_43xxx)
+  add_definitions(-DSTM32F427_437xx)
   set(LINKER_SCRIPT targets/hitec/stm32f427_flash.ld)
   set(FIRMWARE_TARGET_SRC
     ${FIRMWARE_TARGET_SRC}

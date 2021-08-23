@@ -86,6 +86,7 @@ bool I2C_WaitEventCleared(uint32_t event)
   */
 bool I2C_EE_ReadBlock(uint8_t* pBuffer, uint16_t ReadAddr, uint16_t NumByteToRead)
 {
+    
   if (!I2C_WaitEventCleared(I2C_FLAG_BUSY))
     return false;
 
@@ -100,6 +101,7 @@ bool I2C_EE_ReadBlock(uint8_t* pBuffer, uint16_t ReadAddr, uint16_t NumByteToRea
   I2C_SendData(I2C, (uint8_t)((ReadAddr & 0xFF00) >> 8));
   if (!I2C_WaitEvent(I2C_EVENT_MASTER_BYTE_TRANSMITTING))
     return false;
+
   I2C_SendData(I2C, (uint8_t)(ReadAddr & 0x00FF));
   if (!I2C_WaitEvent(I2C_EVENT_MASTER_BYTE_TRANSMITTED))
     return false;

@@ -60,6 +60,9 @@ void boardOff();
 void init2MhzTimer();
 void init5msTimer();
 
+
+void initPiUART();
+
 // PCBREV driver
 enum {
   // X7
@@ -94,7 +97,7 @@ void sdMount();
 void sdDone();
 void sdPoll10ms();
 uint32_t sdMounted();
-#define SD_CARD_PRESENT()               ((SD_GPIO_PRESENT_GPIO->IDR & SD_GPIO_PRESENT_GPIO_PIN) == 0)
+#define SD_CARD_PRESENT()               true//((SD_GPIO_PRESENT_GPIO->IDR & SD_GPIO_PRESENT_GPIO_PIN) == 0)
 #endif
 
 // Flash Write driver
@@ -289,13 +292,10 @@ enum EnumSwitches
   SW_SB,
   SW_SC,
   SW_SD,
-  SW_SE,
-  SW_SF,
-  SW_SG,
-  SW_SH
+  SW_SE
 };
 
-  #define IS_3POS(x)                      ((x) != SW_SF && (x) != SW_SH)
+  #define IS_3POS(x)                      (true) //((x) == SW_SB || (x) == SW_SC)
 
 enum EnumSwitchesPositions
 {
@@ -314,25 +314,16 @@ enum EnumSwitchesPositions
   SW_SE0,
   SW_SE1,
   SW_SE2,
-  SW_SG0,
-  SW_SG1,
-  SW_SG2,
-  SW_SH0,
-  SW_SH1,
-  SW_SH2,
-  SW_SI0,
-  SW_SI1,
-  SW_SI2,
   NUM_SWITCHES_POSITIONS
 };
 
 
-  #define NUM_SWITCHES                  8
-  #define STORAGE_NUM_SWITCHES          8
+  #define NUM_SWITCHES                  5
+  #define STORAGE_NUM_SWITCHES          5
 
   //TODO: might have to change switch, pots and sliders config
   #define DEFAULT_SWITCH_CONFIG         (SWITCH_TOGGLE << 14) + (SWITCH_3POS << 12) + (SWITCH_2POS << 10) + (SWITCH_3POS << 8) + (SWITCH_3POS << 6) + (SWITCH_3POS << 4) + (SWITCH_3POS << 2) + (SWITCH_3POS << 0)
-  #define DEFAULT_POTS_CONFIG           (POT_WITH_DETENT << 0) + (POT_WITH_DETENT << 2); // S1 = pot without detent, S2 = pot with detent
+  #define DEFAULT_POTS_CONFIG           (POT_WITH_DETENT << 0) + (POT_WITH_DETENT << 2);
   #define DEFAULT_SLIDERS_CONFIG        (SLIDER_WITH_DETENT << 3) + (SLIDER_WITH_DETENT << 2) + (SLIDER_WITH_DETENT << 1) + (SLIDER_WITH_DETENT << 0)
 
 #define STORAGE_NUM_SWITCHES_POSITIONS  (STORAGE_NUM_SWITCHES * 3)
@@ -366,25 +357,20 @@ enum Analogs {
   STICK4,
   POT_FIRST,
   POT1 = POT_FIRST,
-  POT2,
-  POT3,
-  POT4,
-  POT_LAST = POT4,
+  POT_LAST = POT1,
   SLIDER1,
   SLIDER2,
-  SLIDER3,
-  SLIDER4,
   TX_VOLTAGE,
   TX_RTC_VOLTAGE,
   NUM_ANALOGS
 };
 
 
-#define NUM_POTS                      4
-#define NUM_SLIDERS                   4
+#define NUM_POTS                      1
+#define NUM_SLIDERS                   2
 
-#define STORAGE_NUM_POTS              4
-#define STORAGE_NUM_SLIDERS           4
+#define STORAGE_NUM_POTS              1
+#define STORAGE_NUM_SLIDERS           2
 
 #define NUM_XPOTS                     STORAGE_NUM_POTS
 
@@ -618,15 +604,12 @@ void bluetoothInit(uint32_t baudrate, bool enable);
 void bluetoothWriteWakeup();
 uint8_t bluetoothIsWriting();
 void bluetoothDisable();
-#if defined(PCBX9LITES) || defined(PCBX7ACCESS)
-  #define IS_BLUETOOTH_CHIP_PRESENT()     (true)
-#elif defined(PCBX9LITE)
-  #define IS_BLUETOOTH_CHIP_PRESENT()     (false)
-#elif defined(BLUETOOTH_PROBE) && !defined(SIMU)
+
+#if defined(BLUETOOTH_PROBE) && !defined(SIMU)
   extern volatile uint8_t btChipPresent;
   #define IS_BLUETOOTH_CHIP_PRESENT()     (btChipPresent)
 #else
-  #define IS_BLUETOOTH_CHIP_PRESENT()     (true)
+  #define IS_BLUETOOTH_CHIP_PRESENT()     (false)
 #endif
 
 // USB Charger

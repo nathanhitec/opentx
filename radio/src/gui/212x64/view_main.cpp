@@ -165,17 +165,9 @@ void displayTrims(uint8_t phase)
 void drawSliders()
 {
   for (uint8_t i = NUM_STICKS; i < NUM_STICKS + NUM_POTS + NUM_SLIDERS; i++) {
-#if defined(PCBX9E)
-    if (i < SLIDER1)
-      continue;  // TODO change and display more values
-    coord_t x = ((i==SLIDER1 || i==SLIDER3) ? 3 : LCD_W-5);
-    int8_t y = (i<SLIDER3 ? LCD_H/2+1 : 1);
-#else
-    if (i == POT3)
-      continue;
     coord_t x = ((i==POT1 || i==SLIDER1) ? 3 : LCD_W-5);
     int8_t y = (i>=SLIDER1 ? LCD_H/2+1 : 1);
-#endif
+
     lcdDrawSolidVerticalLine(x, y, LCD_H/2-2);
     lcdDrawSolidVerticalLine(x+1, y, LCD_H/2-2);
     y += LCD_H / 2 - 4;

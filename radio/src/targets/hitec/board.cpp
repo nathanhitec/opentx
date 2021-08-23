@@ -58,6 +58,7 @@ void boardInit()
         EXTMODULE_RCC_AHB1Periph |
         TELEMETRY_RCC_AHB1Periph |
         SPORT_UPDATE_RCC_AHB1Periph |
+        PI_RCC_AHB1Periph |
         AUX_SERIAL_RCC_AHB1Periph |
         TRAINER_RCC_AHB1Periph |
         TRAINER_MODULE_RCC_AHB1Periph |
@@ -82,6 +83,7 @@ void boardInit()
         INTMODULE_RCC_APB1Periph |
         TRAINER_MODULE_RCC_APB1Periph |
         MIXER_SCHEDULER_TIMER_RCC_APB1Periph |
+        PI_RCC_APB1Periph |
         BT_RCC_APB1Periph |
         GYRO_RCC_APB1Periph,
         ENABLE);
@@ -130,6 +132,7 @@ void boardInit()
   __enable_irq();
   i2cInit();
   usbInit();
+  initPiUART();
   
 
 #if defined(DEBUG) && defined(AUX_SERIAL_GPIO)
@@ -183,28 +186,12 @@ void boardOff()
   lcdOff();
   SysTick->CTRL = 0; // turn off systick
   pwrOff();
-  //pwrOn();
+
   // disable interrupts
   __disable_irq();
 
   while (1) {
     WDG_RESET();
-#if defined(PWR_BUTTON_PRESS)
-    // X9E/X7 needs watchdog reset because CPU is still running while
-    // the power key is held pressed by the user.
-    // The power key should be released by now, but we must make sure
-    if (!pwrPressed()) {
-      // Put the CPU into sleep to reduce the consumption,
-      // it might help with the RTC reset issue
-      PWR->CR |= PWR_CR_CWUF;
-      /* Select STANDBY mode */
-      PWR->CR |= PWR_CR_PDDS;
-      /* Set SLEEPDEEP bit of Cortex System Control Register */
-      SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-      /* Request Wait For Event */
-      __WFE();
-    }
-#endif
   }
 
   // this function must not return!

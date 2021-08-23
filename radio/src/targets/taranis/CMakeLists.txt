@@ -5,7 +5,7 @@ option(PXX2 "PXX2 protocol support" OFF)
 option(AFHDS3 "AFHDS3 TX Module" ON)
 option(GHOST "Ghost TX Module" ON)
 option(INTERNAL_MODULE_PPM "Support for PPM internal module" OFF)
-option(AUTOUPDATE "Auto update internal chips from SD" OFF)
+
 option(BIND_KEY "Enable bind button" OFF)
 
 set(EXTERNAL_MODULE YES)

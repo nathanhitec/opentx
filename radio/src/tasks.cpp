@@ -248,7 +248,7 @@ bool perMainEnabled = true;
 TASK_FUNCTION(menusTask)
 {
   opentxInit();
-
+  
 #if defined(PWR_BUTTON_PRESS)
   while (true) {
     uint32_t pwr_check = pwrCheck();
@@ -270,6 +270,7 @@ TASK_FUNCTION(menusTask)
     }
 #else
     perMain();
+
 #endif
     DEBUG_TIMER_STOP(debugTimerPerMain);
     // TODO remove completely massstorage from sky9x firmware

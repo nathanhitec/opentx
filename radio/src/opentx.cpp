@@ -317,11 +317,12 @@ void generalDefault()
   }
 
   
+  /*
 #if defined(PCBX9E)
   const int8_t defaultName[] = { 20, -1, -18, -1, -14, -9, -19 };
   memcpy(g_eeGeneral.bluetoothName, defaultName, sizeof(defaultName));
 #endif
-
+*/
 
 #if !defined(EEPROM)
   strcpy(g_eeGeneral.currModelFilename, DEFAULT_MODEL_FILENAME);
@@ -1909,26 +1910,29 @@ void opentxInit()
     menuHandlers[1] = menuModelSelect;
   #endif
 #endif
-    
-    
+ 
+   
+
+    //Somethings up with eeprom, not responding
 #if defined(EEPROM)
   bool radioSettingsValid = storageReadRadioSettings(false);
 #endif
 
-    bool radioSettingsValid = true;
+   
+
   BACKLIGHT_ENABLE(); // we start the backlight during the startup animation
 
 #if defined(STARTUP_ANIMATION)
   
   if (WAS_RESET_BY_WATCHDOG_OR_SOFTWARE()) {
-    pwrOn();
+    //pwrOn();
   }
   else {
     runStartupAnimation();
   }
 #else // defined(PWR_BUTTON_PRESS)
   
-  pwrOn();
+  //pwrOn();
 #endif
 
   // Radios handle UNEXPECTED_SHUTDOWN() differently:
@@ -1945,13 +1949,13 @@ void opentxInit()
 #if defined(RTC_BACKUP_RAM)
   SET_POWER_REASON(0);
 #endif
-
+  
   
 #if defined(SDCARD)
   // SDCARD related stuff, only done if not unexpectedShutdown
   if (!globalData.unexpectedShutdown) {
     sdInit();
-
+    
 #if defined(AUTOUPDATE)
     sportStopSendByteLoop();
     if (f_stat(AUTOUPDATE_FILENAME, nullptr) == FR_OK) {
@@ -1977,8 +1981,10 @@ void opentxInit()
     logsInit();
   }
 #endif
-*/
+
   
+  
+ 
 #if defined(EEPROM)
   if (!radioSettingsValid)
     storageReadRadioSettings();
@@ -2064,7 +2070,7 @@ void opentxInit()
   if (!globalData.unexpectedShutdown) {
     opentxStart();
   }
-
+  
 #if !defined(RTC_BACKUP_RAM)
   if (!g_eeGeneral.unexpectedShutdown) {
     g_eeGeneral.unexpectedShutdown = 1;
@@ -2125,13 +2131,13 @@ int main()
 #if !defined(SIMU)
   stackPaint();
 #endif
-
 #if defined(SPLASH) && !defined(STARTUP_ANIMATION)
   if (!UNEXPECTED_SHUTDOWN()) {
-    drawSplash();
+      drawSplash();
   }
 #endif
 
+  
 #if defined(PCBHORUS)
   if (!IS_FIRMWARE_COMPATIBLE_WITH_BOARD()) {
     runFatalErrorScreen(STR_WRONG_PCBREV);

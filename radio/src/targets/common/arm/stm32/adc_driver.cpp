@@ -31,18 +31,21 @@
 #elif defined(PCBX10)
   const int8_t adcDirection[NUM_ANALOGS] = {1,-1,1,-1,  -1,1,-1,   1,1,    1, -1};
 #elif defined(PCBX9E)
+      const int8_t adcDirection[NUM_ANALOGS] = { 1,1,-1,-1,  1,-1,-1,-1, -1 };
 #if defined(HORUS_STICKS)
   const int8_t adcDirection[NUM_ANALOGS] = {1,-1,1,-1,  -1,-1,-1,1, -1,1,1,  -1,-1,-1};
 #else
   //Used by Hitec GCSv2
-  const int8_t adcDirection[NUM_ANALOGS] = {1,1,-1,-1,  -1,-1,-1,1, -1,1,1,  -1,-1,-1};
+      
+     // const uint8_t adcMapping[NUM_ANALOGS] = { 0 /*STICK1*/, 1 /*STICK2*/, 2 /*STICK3*/, 3 /*STICK4*/,
+      //                                          11 /*POT1*/, 4 /*POT2*/, 5 /*POT3*/, 6 /*POT4*/,
+       //                                         12 /*SLIDER1*/, 13 /*SLIDER2*/, 7 /*SLIDER3*/, 8 /*SLIDER4*/,
+       //                                         9 /*TX_VOLTAGE*/, 10 /*TX_VBAT*/ };
 #endif
   //Used by Hitec GCSv2
-  //TODO: probably need to alter this
-  const uint8_t adcMapping[NUM_ANALOGS] = { 0 /*STICK1*/, 1 /*STICK2*/, 2 /*STICK3*/, 3 /*STICK4*/,
-                                            11 /*POT1*/, 4 /*POT2*/, 5 /*POT3*/, 6 /*POT4*/,
-                                            12 /*SLIDER1*/, 13 /*SLIDER2*/, 7 /*SLIDER3*/, 8 /*SLIDER4*/,
-                                            9 /*TX_VOLTAGE*/, 10 /*TX_VBAT*/ };
+  
+
+  
 #elif defined(PCBX9DP)
   const int8_t adcDirection[NUM_ANALOGS] = {1,-1,1,-1,  1,1,-1,  1,1,  1,  1};
 #elif defined(PCBX9D)
@@ -61,10 +64,10 @@
   #define FIRST_ANALOG_ADC             (STICKS_PWM_ENABLED() ? NUM_PWMSTICKS : 0)
   #define NUM_ANALOGS_ADC              (STICKS_PWM_ENABLED() ? (NUM_ANALOGS - NUM_PWMSTICKS) : NUM_ANALOGS)
 #elif defined(PCBX9E)
+
   //Used by Hitec GCSv2
   #define FIRST_ANALOG_ADC             0
-  #define NUM_ANALOGS_ADC              11
-  #define NUM_ANALOGS_ADC_EXT          (NUM_ANALOGS - NUM_ANALOGS_ADC)
+#define NUM_ANALOGS_ADC                NUM_ANALOGS
 #else
   #define FIRST_ANALOG_ADC             0
   #define NUM_ANALOGS_ADC              NUM_ANALOGS
@@ -119,10 +122,8 @@ void adcInit()
   }
 #elif defined(PCBX9E)
   //Used by Hitec GCSv2
-  ADC_MAIN->SQR2 = (ADC_CHANNEL_POT4 << 0) + (ADC_CHANNEL_SLIDER3 << 5) + (ADC_CHANNEL_SLIDER4 << 10) + (ADC_CHANNEL_SLIDER2 << 15) + (ADC_CHANNEL_BATT << 20);
-  ADC_MAIN->SQR3 = (ADC_CHANNEL_STICK_LH << 0) + (ADC_CHANNEL_STICK_LV << 5) + (ADC_CHANNEL_STICK_RV << 10) + (ADC_CHANNEL_STICK_RH << 15) + (ADC_CHANNEL_POT2 << 20) + (ADC_CHANNEL_POT3 << 25);
-  //ADC_MAIN->SQR2 = (ADC_CHANNEL_POT4 << 0) + (ADC_CHANNEL_SLIDER3 << 5) + (ADC_CHANNEL_SLIDER4 << 10) + (ADC_CHANNEL_BATT << 15) + (ADC_Channel_Vbat << 20);
-  //ADC_MAIN->SQR3 = (ADC_CHANNEL_STICK_LH << 0) + (ADC_CHANNEL_STICK_LV << 5) + (ADC_CHANNEL_STICK_RV << 10) + (ADC_CHANNEL_STICK_RH << 15) + (ADC_CHANNEL_POT2 << 20) + (ADC_CHANNEL_POT3 << 25);
+  ADC_MAIN->SQR2 = (ADC_CHANNEL_SLIDER2<< 0) + (ADC_CHANNEL_BATT << 5) + (ADC_Channel_Vbat << 10);
+  ADC_MAIN->SQR3 = (ADC_CHANNEL_STICK_LH << 0) + (ADC_CHANNEL_STICK_LV << 5) + (ADC_CHANNEL_STICK_RV << 10) + (ADC_CHANNEL_STICK_RH << 15) + (ADC_CHANNEL_POT1 << 20) + (ADC_CHANNEL_SLIDER1 << 25);
 #elif defined(PCBXLITE)
   if (STICKS_PWM_ENABLED()) {
     ADC_MAIN->SQR2 = 0;
@@ -169,11 +170,12 @@ void adcInit()
 
 #if defined(PCBX9E)
   //Used by Hitec GCSv2
+  /*
   ADC_EXT->CR1 = ADC_CR1_SCAN;
   ADC_EXT->CR2 = ADC_CR2_ADON | ADC_CR2_DMA | ADC_CR2_DDS;
   ADC_EXT->SQR1 = (NUM_ANALOGS_ADC_EXT - 1) << 20;
   ADC_EXT->SQR2 = 0;
-  ADC_EXT->SQR3 = (ADC_CHANNEL_POT1 << 0) + (ADC_CHANNEL_SLIDER1 << 5);
+  ADC_EXT->SQR3 = (ADC_CHANNEL_POT1 << 0) + (ADC_CHANNEL_SLIDER1 << 5) + (ADC_CHANNEL_SLIDER2 << 10); // conversions 1 to 3
   ADC_EXT->SMPR1 = (ADC_SAMPTIME << 0) + (ADC_SAMPTIME << 3) + (ADC_SAMPTIME << 6) + (ADC_SAMPTIME << 9) + (ADC_SAMPTIME << 12) + (ADC_SAMPTIME << 15) + (ADC_SAMPTIME << 18) + (ADC_SAMPTIME << 21) + (ADC_SAMPTIME << 24);
   ADC_EXT->SMPR2 = (ADC_SAMPTIME << 0) + (ADC_SAMPTIME << 3) + (ADC_SAMPTIME << 6) + (ADC_SAMPTIME << 9) + (ADC_SAMPTIME << 12) + (ADC_SAMPTIME << 15) + (ADC_SAMPTIME << 18) + (ADC_SAMPTIME << 21) + (ADC_SAMPTIME << 24) + (ADC_SAMPTIME << 27);
 
@@ -182,7 +184,8 @@ void adcInit()
   ADC_EXT_DMA_Stream->M0AR = CONVERT_PTR_UINT(adcValues + NUM_ANALOGS_ADC);
   ADC_EXT_DMA_Stream->NDTR = NUM_ANALOGS_ADC_EXT;
   ADC_EXT_DMA_Stream->FCR = DMA_SxFCR_DMDIS | DMA_SxFCR_FTH_0;
-#endif
+  */
+  #endif
 
 #if NUM_PWMSTICKS > 0
   if (STICKS_PWM_ENABLED()) {
@@ -206,14 +209,18 @@ void adcSingleRead()
 
 #if defined(PCBX9E)
   //Used by Hitec GCSv2
+  /*
   ADC_EXT_DMA_Stream->CR &= ~DMA_SxCR_EN; // Disable DMA
   ADC_EXT->SR &= ~(uint32_t)(ADC_SR_EOC | ADC_SR_STRT | ADC_SR_OVR);
   ADC_EXT_SET_DMA_FLAGS();
   ADC_EXT_DMA_Stream->CR |= DMA_SxCR_EN; // Enable DMA
   ADC_EXT->CR2 |= (uint32_t)ADC_CR2_SWSTART;
-#endif
+  */
+  #endif
 
+  /*
 #if defined(PCBX9E)
+  
   //Used by Hitec GCSv2
   for (unsigned int i=0; i<10000; i++) {
     if (ADC_TRANSFER_COMPLETE() && ADC_EXT_TRANSFER_COMPLETE()) {
@@ -222,14 +229,15 @@ void adcSingleRead()
   }
   ADC_DMA_Stream->CR &= ~DMA_SxCR_EN; // Disable DMA
   ADC_EXT_DMA_Stream->CR &= ~DMA_SxCR_EN; // Disable DMA
-#else
+  */
+ //*#else
   for (unsigned int i = 0; i < 10000; i++) {
     if (ADC_TRANSFER_COMPLETE()) {
       break;
     }
   }
   ADC_DMA_Stream->CR &= ~DMA_SxCR_EN; // Disable DMA
-#endif
+//#endif
 
 #if defined(PCBX10)
   if (isVBatBridgeEnabled()) {
@@ -288,7 +296,7 @@ uint16_t getAnalogValue(uint8_t index)
     return 0;
   }
 #if defined(PCBX9E)
-  index = adcMapping[index];
+  //index = adcMapping[index];
 #endif
   if (adcDirection[index] < 0)
     return 4095 - adcValues[index];
