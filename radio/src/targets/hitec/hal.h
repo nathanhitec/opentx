@@ -392,6 +392,8 @@
 
 
 // BackLight
+
+
 #if defined(GCSV2)
   #define BACKLIGHT_RCC_AHB1Periph      RCC_AHB1Periph_GPIOE
   #define BACKLIGHT_RCC_APB1Periph      0
@@ -458,7 +460,7 @@
 #endif
 #define I2C_SPEED                       400000
 #define I2C_ADDRESS_EEPROM              0xA0
-#define I2C_FLASH_PAGESIZE              32
+#define I2C_FLASH_PAGESIZE              64
 
 
 // SPI2-SD
@@ -469,8 +471,8 @@
 #define SD_GPIO_PIN_SCK                 GPIO_Pin_13 // PB.13
 #define SD_GPIO_PIN_MISO                GPIO_Pin_14 // PB.14
 #define SD_GPIO_PIN_MOSI                GPIO_Pin_15 // PB.15
-#define SD_GPIO_PRESENT_GPIO            GPIOB
-#define SD_GPIO_PRESENT_GPIO_PIN        GPIO_Pin_6  // PB.06
+#define SD_GPIO_PRESENT_GPIO            GPIOE
+#define SD_GPIO_PRESENT_GPIO_PIN        GPIO_Pin_0 // PE.00
 #define SD_GPIO_AF                      GPIO_AF_SPI2
 #define SD_GPIO_PinSource_CS            GPIO_PinSource12
 #define SD_GPIO_PinSource_SCK           GPIO_PinSource13

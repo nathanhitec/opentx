@@ -210,7 +210,7 @@ int main()
 
   pwrInit();
   keysInit();
-
+ 
   // wait a bit for the inputs to stabilize...
   if (!WAS_RESET_BY_WATCHDOG_OR_SOFTWARE()) {
     for (uint32_t i = 0; i < 150000; i++) {
@@ -218,19 +218,16 @@ int main()
     }
   }
 
-#if defined(RADIO_T8) && !defined(RADIOMASTER_RELEASE)
-  // Bind button not pressed
-  if ((~KEYS_GPIO_REG_BIND & KEYS_GPIO_PIN_BIND) == false) {
-#else
-  // LHR & RHL trims not pressed simultanously
-  if (readTrims() != BOOTLOADER_KEYS) {
-#endif
+
+  // menu button not pressed
+  if ((~KEYS_GPIO_REG_MENU & KEYS_GPIO_PIN_MENU) == false) {
+
     // Start main application
     jumpTo(APP_START_ADDRESS);
   }
 
   pwrOn();
-
+  
 #if defined(ROTARY_ENCODER_NAVIGATION)
   rotaryEncoderInit();
 #endif
@@ -254,7 +251,7 @@ int main()
 
 #if defined(BLUETOOTH)
   // we shutdown the bluetooth module now to be sure it will be detected on firmware start
-  bluetoothInit(BLUETOOTH_DEFAULT_BAUDRATE, false);
+  //bluetoothInit(BLUETOOTH_DEFAULT_BAUDRATE, false);
 #endif
 
 #if defined(PCBTARANIS)

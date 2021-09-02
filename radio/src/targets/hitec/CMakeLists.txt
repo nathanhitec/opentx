@@ -22,7 +22,7 @@ if(PCBREV STREQUAL GCSV2)
   add_definitions(-DEEPROM_VARIANT=0x8000)
   add_definitions(-DPWR_BUTTON_${PWR_BUTTON})
 
-  
+   set(CPU_TYPE STM32F4)
   set(CPU_TYPE_FULL "STM32F407xE" CACHE STRING "CPU Type (STM32F407xE/STM32F27xE)")
   set(USB_CHARGER YES)
  
@@ -40,12 +40,13 @@ if(PCBREV STREQUAL GCSV2)
 
   set(ROTARY_ENCODER YES)
   add_definitions(-DMANUFACTURER_HITEC)
+  add_definitions(-DSOFTWARE_VOLUME)
 
 else()
    message(FATAL_ERROR "Unknown PCBREV: '${PCBREV}' expecting GCSV2")
 endif()
 
-
+    
 if(CPU_TYPE_FULL STREQUAL STM32F407xE)
   add_definitions(-DSTM32F40_41xxx)
   set(LINKER_SCRIPT targets/hitec/stm32f407_flash.ld)
@@ -121,12 +122,13 @@ set(SRC
   sbus.cpp
   )
 
+  
 
 set(TARGET_SRC
   ${TARGET_SRC}
   ${LED_DRIVER}
-  backlight_driver.cpp
   trainer_driver.cpp
+  backlight_driver.cpp
   pi_driver.cpp
   debug_driver.cpp
   ../common/arm/stm32/timers_driver.cpp

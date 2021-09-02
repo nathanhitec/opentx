@@ -43,8 +43,8 @@ void rotaryEncoderCheck();
   #define PERI1_FREQUENCY               42000000
   #define PERI2_FREQUENCY               84000000
 #else
-  #define PERI1_FREQUENCY               30000000
-  #define PERI2_FREQUENCY               60000000
+  #define PERI1_FREQUENCY               60000000
+  #define PERI2_FREQUENCY               30000000
 #endif
 
 #define TIMER_MULT_APB1                 2
@@ -97,7 +97,7 @@ void sdMount();
 void sdDone();
 void sdPoll10ms();
 uint32_t sdMounted();
-#define SD_CARD_PRESENT()               true//((SD_GPIO_PRESENT_GPIO->IDR & SD_GPIO_PRESENT_GPIO_PIN) == 0)
+#define SD_CARD_PRESENT()               ((SD_GPIO_PRESENT_GPIO->IDR & SD_GPIO_PRESENT_GPIO_PIN) == 1)
 #endif
 
 // Flash Write driver
@@ -133,7 +133,7 @@ void extmoduleSendInvertedByte(uint8_t byte);
 
 #if defined(TRAINER_DETECT_GPIO)
   // Trainer detect is a switch on the jack
-  #define TRAINER_CONNECTED()           (GPIO_ReadInputDataBit(TRAINER_DETECT_GPIO, TRAINER_DETECT_GPIO_PIN) == Bit_RESET)
+  #define TRAINER_CONNECTED()          (GPIO_ReadInputDataBit(TRAINER_DETECT_GPIO, TRAINER_DETECT_GPIO_PIN) == Bit_RESET)
 #elif defined(PCBXLITES)
   // Trainer is on the same connector than Headphones
   enum JackState
@@ -196,10 +196,6 @@ int sbusGetByte(uint8_t * byte);
 // Keys driver
 enum EnumKeys
 {
-#if defined(KEYS_GPIO_REG_SHIFT)
-  KEY_SHIFT,
-#endif
-
 #if defined(KEYS_GPIO_REG_MENU)
   KEY_MENU,
 #endif
@@ -207,39 +203,10 @@ enum EnumKeys
   KEY_EXIT,
   KEY_ENTER,
 
-#if defined(KEYS_GPIO_REG_DOWN)
-  KEY_DOWN,
-  KEY_UP,
-#endif
-
-#if defined(KEYS_GPIO_REG_RIGHT)
-  KEY_RIGHT,
-  KEY_LEFT,
-#endif
-
 #if defined(KEYS_GPIO_REG_PAGE)
   KEY_PAGE,
 #endif
 
-#if defined(KEYS_GPIO_REG_PAGEUP)
-  KEY_PAGEUP,
-#endif
-
-#if defined(KEYS_GPIO_REG_PAGEDN)
-  KEY_PAGEDN,
-#endif
-
-#if defined(KEYS_GPIO_REG_SYS)
-  KEY_SYS,
-#endif
-
-#if defined(KEYS_GPIO_REG_MDL)
-  KEY_MODEL,
-#endif
-
-#if defined(KEYS_GPIO_REG_TELE)
-  KEY_TELE,
-#endif
 
 #if defined(KEYS_GPIO_REG_PLUS)
   KEY_PLUS,
@@ -248,11 +215,6 @@ enum EnumKeys
 
   KEY_COUNT,
   KEY_MAX = KEY_COUNT - 1,
-
-#if defined(KEYS_GPIO_REG_BIND)
-  KEY_BIND,
-#endif
-  
   TRM_BASE,
   TRM_LH_DWN = TRM_BASE,
   TRM_LH_UP,
@@ -295,7 +257,7 @@ enum EnumSwitches
   SW_SE
 };
 
-  #define IS_3POS(x)                      (true) //((x) == SW_SB || (x) == SW_SC)
+  #define IS_3POS(x)                      ((x) == SW_SB || (x) == SW_SC)
 
 enum EnumSwitchesPositions
 {
@@ -343,6 +305,7 @@ uint32_t readTrims();
 #else
   #define WDG_ENABLE(x)                 watchdogInit(x)
   #define WDG_RESET()                   IWDG->KR = 0xAAAA
+
 #endif
 void watchdogInit(unsigned int duration);
 #define WAS_RESET_BY_SOFTWARE()             (RCC->CSR & RCC_CSR_SFTRSTF)

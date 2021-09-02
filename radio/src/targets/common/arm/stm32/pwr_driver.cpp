@@ -102,7 +102,9 @@ void pwrOn()
   GPIO_Init(PWR_ON_GPIO, &GPIO_InitStructure);
 
   GPIO_SetBits(PWR_ON_GPIO, PWR_ON_GPIO_PIN);
+
  */
+    
 }
 
 void pwrOff()
@@ -110,7 +112,7 @@ void pwrOff()
     /*
   GPIO_ResetBits(PWR_ON_GPIO, PWR_ON_GPIO_PIN);
   */
-  }
+ }
 
 #if defined(PWR_EXTRA_SWITCH_GPIO)
 bool pwrForcePressed()
@@ -131,7 +133,7 @@ bool pwrPressed()
 
 void pwrResetHandler()
 {
-    /*
+    
   RCC->AHB1ENR |= PWR_RCC_AHB1Periph;
 
   // these two NOPs are needed (see STM32F errata sheet) before the peripheral
@@ -142,5 +144,4 @@ void pwrResetHandler()
   if (WAS_RESET_BY_WATCHDOG_OR_SOFTWARE()) {
     pwrOn();
   }
-  */
 }

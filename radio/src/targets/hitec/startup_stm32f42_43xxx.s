@@ -45,7 +45,7 @@
 .global  Default_Handler
 
 /* start address for the initialization values of the .data section. 
-defined in linker script */
+defined in linker script      set stack pointer */
 .word  _sidata
 /* start address for the .data section. defined in linker script */  
 .word  _sdata
@@ -70,7 +70,7 @@ defined in linker script */
   .weak  Reset_Handler
   .type  Reset_Handler, %function
 Reset_Handler:
-  ldr   sp, =_estack    /* set stack pointer */
+  ldr   sp, = _estack
   bl pwrResetHandler    /* jump to WDT reset handler where soft power control pin is turned on as soon as possible */
 
 /* Copy the data segment initializers from flash to SRAM */  
@@ -115,7 +115,7 @@ LoopPaintMainStack:
   bl  SystemInit
 /* Call static constructors */
   bl  __libc_init_array 
-/* Call the application's entry point.*/
+/* Call the applications entry point.*/
   bl  main
   bx  lr    
 .size  Reset_Handler, .-Reset_Handler

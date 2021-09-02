@@ -29,72 +29,22 @@ uint32_t readKeys()
   if (~KEYS_GPIO_REG_ENTER & KEYS_GPIO_PIN_ENTER)
     result |= 1 << KEY_ENTER;
 
-#if defined(KEYS_GPIO_PIN_MENU)
   if (~KEYS_GPIO_REG_MENU & KEYS_GPIO_PIN_MENU)
     result |= 1 << KEY_MENU;
-#endif
 
-#if defined(KEYS_GPIO_PIN_PAGE)
   if (~KEYS_GPIO_REG_PAGE & KEYS_GPIO_PIN_PAGE)
     result |= 1 << KEY_PAGE;
-#endif
 
-#if defined(KEYS_GPIO_PIN_PAGEUP)
-  if (~KEYS_GPIO_REG_PAGEUP & KEYS_GPIO_PIN_PAGEUP)
-    result |= 1 << KEY_PAGEUP;
-#endif
-
-#if defined(KEYS_GPIO_PIN_PAGEDN)
-  if (~KEYS_GPIO_REG_PAGEDN & KEYS_GPIO_PIN_PAGEDN)
-    result |= 1 << KEY_PAGEDN;
-#endif
-
-#if defined(KEYS_GPIO_PIN_SYS)
-  if (~KEYS_GPIO_REG_SYS & KEYS_GPIO_PIN_SYS)
-    result |= 1 << KEY_SYS;
-#endif
-
-#if defined(KEYS_GPIO_PIN_MDL)
-  if (~KEYS_GPIO_REG_MDL & KEYS_GPIO_PIN_MDL)
-    result |= 1 << KEY_MODEL;
-#endif
-
-#if defined(KEYS_GPIO_PIN_TELE)
-  if (~KEYS_GPIO_REG_TELE & KEYS_GPIO_PIN_TELE)
-    result |= 1 << KEY_TELE;
-#endif
 
   if (~KEYS_GPIO_REG_EXIT & KEYS_GPIO_PIN_EXIT)
     result |= 1 << KEY_EXIT;
 
-#if defined(KEYS_GPIO_PIN_PLUS)
   if (~KEYS_GPIO_REG_PLUS & KEYS_GPIO_PIN_PLUS)
     result |= 1 << KEY_PLUS;
+
   if (~KEYS_GPIO_REG_MINUS & KEYS_GPIO_PIN_MINUS)
     result |= 1 << KEY_MINUS;
-#endif
 
-#if defined(KEYS_GPIO_PIN_LEFT)
-  if (~KEYS_GPIO_REG_LEFT & KEYS_GPIO_PIN_LEFT)
-    result |= 1 << KEY_LEFT;
-  if (~KEYS_GPIO_REG_RIGHT & KEYS_GPIO_PIN_RIGHT)
-    result |= 1 << KEY_RIGHT;
-  if (~KEYS_GPIO_REG_UP & KEYS_GPIO_PIN_UP)
-    result |= 1 << KEY_UP;
-  if (~KEYS_GPIO_REG_DOWN & KEYS_GPIO_PIN_DOWN)
-    result |= 1 << KEY_DOWN;
-#endif
-
-#if defined(KEYS_GPIO_PIN_SHIFT)
-  if (~KEYS_GPIO_REG_SHIFT & KEYS_GPIO_PIN_SHIFT)
-    result |= 1 << KEY_SHIFT;
-#endif
-
-#if defined(KEYS_GPIO_PIN_BIND)
-  if (~KEYS_GPIO_REG_BIND & KEYS_GPIO_PIN_BIND)
-    result |= 1 << KEY_BIND;
-#endif
-  // if (result != 0) TRACE("readKeys(): result=0x%02x", result);
 
   return result;
 }
@@ -102,7 +52,6 @@ uint32_t readKeys()
 uint32_t readTrims()
 {
   uint32_t result = 0;
-  //No Trims
   return result;
 }
 
