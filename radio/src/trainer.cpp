@@ -23,6 +23,7 @@
 int16_t ppmInput[MAX_TRAINER_CHANNELS];
 uint8_t ppmInputValidityTimer;
 uint8_t currentTrainerMode = 0xff;
+uint8_t selected_trainer_mode = 0;
 
 void checkTrainerSignalWarning()
 {
@@ -108,8 +109,25 @@ void stopTrainer()
 
 void checkTrainerSettings()
 {
-  uint8_t requiredTrainerMode = g_model.trainerData.mode;
+    //To select controller to be slave, have trainer connected, then push swich E down
+    //Will always default to master if trainer is not connected
+    //IS it ok to poll this pin this frequently? 
 
+    if (!TRAINER_CONNECTED()) {
+        g_model.trainerData.mode = TRAINER_MODE_MASTER_TRAINER_JACK;
+        selected_trainer_mode = TRAINER_SELECT_SLAVE();
+    }
+   else if (TRAINER_CONNECTED() && selected_trainer_mode == 1) {
+        g_model.trainerData.mode = TRAINER_MODE_SLAVE;
+    }
+
+
+ 
+    
+
+
+
+  uint8_t requiredTrainerMode = g_model.trainerData.mode;
   if (requiredTrainerMode != currentTrainerMode) {
     if (currentTrainerMode != 0xFF) {
       stopTrainer();

@@ -131,6 +131,9 @@ void extmoduleSendInvertedByte(uint8_t byte);
 // Trainer driver
 #define SLAVE_MODE()                    (g_model.trainerData.mode == TRAINER_MODE_SLAVE)
 
+#define TRAINER_SELECT_SLAVE()         (GPIO_ReadInputDataBit(GPIOE, SWITCHES_GPIO_PIN_E) == Bit_RESET)
+
+
 #if defined(TRAINER_DETECT_GPIO)
   // Trainer detect is a switch on the jack
   #define TRAINER_CONNECTED()          (GPIO_ReadInputDataBit(TRAINER_DETECT_GPIO, TRAINER_DETECT_GPIO_PIN) == Bit_RESET)
