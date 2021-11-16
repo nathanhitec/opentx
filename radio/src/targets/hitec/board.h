@@ -62,7 +62,9 @@ void init5msTimer();
 
 
 void initPiUART();
-
+void sendRCChannelsOverMavlink(uint16_t* channel_data);
+void sendHeartbeat();
+void MavlinkSendBuffer(const uint8_t * data, uint16_t size);
 // PCBREV driver
 enum {
   // X7

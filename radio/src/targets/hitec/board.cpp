@@ -128,11 +128,13 @@ void boardInit()
   lcdInit(); // delaysInit() must be called before
   audioInit();
   init2MhzTimer();
+  initPiUART();
   init5msTimer();
   __enable_irq();
   i2cInit();
   usbInit();
-  initPiUART();
+  
+
   
 
 #if defined(DEBUG) && defined(AUX_SERIAL_GPIO)

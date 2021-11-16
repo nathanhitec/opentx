@@ -279,19 +279,10 @@
 #define EXTMODULE_USART_RX_DMA_STREAM         DMA2_Stream1
 #endif
 
-//PI debug
-//Do I need to configure swd pins for alternative functions
-#if defined(GCSV2)
-//add support for pi debugging here, configure UART, simple serial interface for debug prints? 
-#endif
 
-
-
-
-//PI UART placeholder
 #if defined(GCSV2)
    #define PI_RCC_APB1Periph              RCC_APB1Periph_USART2
-   #define PI_RCC_AHB1Periph              RCC_AHB1Periph_GPIOD
+   #define PI_RCC_AHB1Periph              (RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_DMA1)
    #define PI_USART                       USART2
    #define PI_USART_GPIO                  GPIOD
    #define PI_USART_GPIO_TX_PIN           GPIO_Pin_5
@@ -299,6 +290,15 @@
    #define PI_USART_GPIO_RX_PIN           GPIO_Pin_6   
    #define PI_USART_GPIO_RX_PinSource     GPIO_PinSource6
    #define PI_USART_GPIO_AF               GPIO_AF_USART2
+   #define PI_USART_TX_DMA                DMA1
+   #define PI_USART_TX_DMA_STREAM         DMA1_Stream6
+   #define PI_USART_TX_DMA_CHANNEL        DMA_Channel_4
+   #define PI_DMA_STREAM_IRQn             DMA1_Stream6_IRQn
+   #define PI_DMA_STREAM_IRQHandler       DMA1_Stream6_IRQHandler
+   #define PI_DMA_FLAG_TC                 DMA_IT_TCIF6
+   #define PI_DMA_FLAG_FE                 DMA_IT_FEIF6
+   #define PI_USART_IRQn                  USART2_IRQn
+   #define PI_USART_IRQHandler            USART2_IRQHandler
 #endif
 
 
@@ -509,6 +509,7 @@
 #define INTERRUPT_xMS_TIMER             TIM14
 #define INTERRUPT_xMS_IRQn              TIM8_TRG_COM_TIM14_IRQn
 #define INTERRUPT_xMS_IRQHandler        TIM8_TRG_COM_TIM14_IRQHandler
+
 
 // 2MHz Timer
 #define TIMER_2MHz_RCC_APB1Periph       RCC_APB1Periph_TIM7
