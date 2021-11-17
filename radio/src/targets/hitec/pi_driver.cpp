@@ -125,37 +125,11 @@ void sendHeartbeat(){
 //Sometimes rcoverride conflicts with heartbeat message can cause bad serial data momentarily
 //bad data send ~10s, seems to be ok when no heartbeats are trying to send
 
-//TODO: mavproxy causing issues with message forwarding over serial
-//Might want to test over udp just to see if it's an issue with serial
-//When trying to forward, incoming? or outgoing? messages contain "bad data"
-//When not trying to forward all seems well
-//Might be an issue with stream rate, and stream rate messages
-//Put modem on board, combine streams
+//TODO: test with tablet, send missions, get params etc
+//TODO: take new controller out to completely test
+//TODO: make whatever changes needed for commands, push repo for pddl
+//TODO: make optimizations above
 
-// Connecting FC straight to telem port from stm32 can see heartbeats in MP,
-// and rc override data changes, 
-//Can be adjusted to send at a lower rate, sent at around 250hz
-// stream rate might have to be lowered/set differently timing issues listed above
-
-//Might want to send a set_message_interval message, wait for ack,
-//then start sending messages at some rate, mavproxy seems to maxs out at 100hz?
-//Although heartbeats should work right?
-
-
-//TODO:  introducing mavproxy to forward messages from serial to udp, to
-//Doesn't work with and without heartbeats as well as making sure
-//parameters are correctly set for telem2
-
-//Get mavproxy working just for udp in and out, for some reason reading bad data
-//mavlink version issues I was suspecting
-
-//serial->udpout over mavproxy creates encrypted packets with RCchannels overrid
-//packets are there but with them some strange encryption packets
-//don't remeber ever seeing these
-
-//Got it working just using serial as master, buadrates were mismatched between modem and FC
-//also telem service was automatically restarting, didn't realize it, 
-//Need to push out to 201 for serial to work, 
 void sendRCChannelsOverMavlink(uint16_t* channel_data) {
 
 	uint8_t sysid = 255;

@@ -53,9 +53,9 @@ void stop5msTimer()
 void interrupt5ms()
 {
   static uint8_t pre_scale;       // Used to get 10 Hz counter
-  static uint8_t heartbeat;
+  //static uint8_t heartbeat;
   ++pre_scale;
-  ++heartbeat;
+  //++heartbeat;
 
 #if defined(HAPTIC)
   DEBUG_TIMER_START(debugTimerHaptic);
@@ -71,10 +71,12 @@ void interrupt5ms()
     DEBUG_TIMER_STOP(debugTimerPer10ms);
   }
 
+/*
   if (heartbeat == 200){
     heartbeat = 0;
     sendHeartbeat();
   }
+  */
 }
 
 extern "C" void INTERRUPT_xMS_IRQHandler()

@@ -163,10 +163,12 @@ void setupPulsesDSM2()
         value = channelOutputs[i] + SRXL_CHAN_CENTER;
         pulse = limit(0, value, 4095);               //lower limit 0x000 upper limit 0xFFF
         ChannelData[i] = pulse / 2 + MAVLINK_VAL_OFFSET;
+        /*
         SRXLData[2 * i + 1] = ((pulse >> 8) & 0xff); //sends MSB first
         SRXLData[2 * i + 2] = (pulse & 0xff);
         crc = srxlCRC16(crc, SRXLData[2 * i + 1]);
         crc = srxlCRC16(crc, SRXLData[2 * i + 2]);
+        */
     }
 
     //sendByteDsm2(SRXL_FRAME_BEGIN_BYTE);
