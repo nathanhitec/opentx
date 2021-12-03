@@ -18,7 +18,7 @@ void initPiUART() {
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_Init(PI_USART_GPIO, &GPIO_InitStructure);
 	GPIO_PinAFConfig(PI_USART_GPIO, PI_USART_GPIO_TX_PinSource, PI_USART_GPIO_AF);
 
@@ -66,7 +66,7 @@ void MavlinkSendBuffer(const uint8_t * data, uint16_t size)
 	USART_DMACmd(PI_USART, USART_DMAReq_Tx, ENABLE);
 
 	//Might not be needed
-  while(DMA_GetCmdStatus(PI_USART_TX_DMA_STREAM) == DISABLE){};
+  //while(DMA_GetCmdStatus(PI_USART_TX_DMA_STREAM) == DISABLE){};
 
   DMA_ITConfig(PI_USART_TX_DMA_STREAM, DMA_IT_TC, ENABLE);
   NVIC_EnableIRQ(PI_DMA_STREAM_IRQn);
@@ -125,10 +125,10 @@ void sendHeartbeat(){
 //Sometimes rcoverride conflicts with heartbeat message can cause bad serial data momentarily
 //bad data send ~10s, seems to be ok when no heartbeats are trying to send
 
-//TODO: test with tablet, send missions, get params etc
 //TODO: take new controller out to completely test
 //TODO: make whatever changes needed for commands, push repo for pddl
-//TODO: make optimizations above
+//TODO: make optimizations above, maybe?
+//If performance is too shoddy need to find optimizations somewhere
 
 void sendRCChannelsOverMavlink(uint16_t* channel_data) {
 
