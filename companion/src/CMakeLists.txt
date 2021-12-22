@@ -319,6 +319,10 @@ PrintTargetReport("${COMPANION_NAME}")
 
 ############# Standalone simulator ###############
 
+
+
+
+#if(FALSE)
 set(simu_SRCS simulator.cpp )
 
 add_executable(${SIMULATOR_NAME} MACOSX_BUNDLE ${WIN_EXECUTABLE_TYPE} ${simu_SRCS} ${icon_RC})
@@ -336,6 +340,9 @@ if(WIN32)
 else()
   file(GLOB simulator_plugins "${CMAKE_BINARY_DIR}/*opentx-*simulator${CMAKE_SHARED_LIBRARY_SUFFIX}")
 endif()
+
+
+#endif()
 
 # the current flavour is not automatically added if build in the current cmake iteration, so always
 # add its library name to be sure
@@ -366,18 +373,20 @@ if(POLICY CMP0026)
   cmake_policy(SET CMP0026 OLD)  # https://cmake.org/cmake/help/v3.0/policy/CMP0026.html
 endif()
 
+if(FALSE)
 if(SIMU_TARGET)
   get_property(current_plugin TARGET opentx-${FLAVOUR}-simulator PROPERTY LOCATION)
   list(APPEND simulator_plugins "${current_plugin}")
+endif()
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   message(STATUS "install " ${CMAKE_BINARY_DIR} " to " ${CMAKE_INSTALL_PREFIX}/bin)
   install(TARGETS ${COMPANION_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
   install(TARGETS ${SIMULATOR_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-  install(FILES ${simulator_plugins} DESTINATION "${SIMULATOR_LIB_INSTALL_PATH}")
+  install(FILES ${simulator_plugins} DESTINATION" ${SIMULATOR_LIB_INSTALL_PATH}")
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/companion.desktop DESTINATION share/applications RENAME companion${C9X_NAME_SUFFIX}.desktop)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/simulator.desktop DESTINATION share/applications RENAME simulator${C9X_NAME_SUFFIX}.desktop)
+  #install(FILES ${CMAKE_CURRENT_BINARY_DIR}/simulator.desktop DESTINATION #share/applications RENAME simulator${C9X_NAME_SUFFIX}.desktop)
   if(${CMAKE_INSTALL_PREFIX} MATCHES "/usr/local")
     set(INSTALL_TEMP_SHR_PFX "/usr/")
     set(INSTALL_TEMP_LIB_PFX "/")

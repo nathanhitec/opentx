@@ -36,6 +36,7 @@
 #define FSIZE_SKY9X                    (256*1024)
 #define FSIZE_9XRPRO                   (512*1024)
 #define FSIZE_HORUS                    (2048*1024)
+
 #define FSIZE_MAX                      FSIZE_HORUS
 
 using namespace Board;
@@ -64,6 +65,7 @@ uint32_t Boards::getFourCC(Type board)
     case BOARD_TARANIS_X7_ACCESS:
       return 0x3678746F;
     case BOARD_TARANIS_X9E:
+    case BOARD_HITEC_GCS:
       return 0x3578746F;
     case BOARD_TARANIS_X9D:
     case BOARD_TARANIS_X9DP:
@@ -118,6 +120,7 @@ int Boards::getEEpromSize(Board::Type board)
     case BOARD_JUMPER_TLITE:
     case BOARD_RADIOMASTER_TX12:
     case BOARD_RADIOMASTER_T8:
+    case BOARD_HITEC_GCS:
       return EESIZE_TARANIS;
     case BOARD_UNKNOWN:
       return EESIZE_MAX;
@@ -155,6 +158,7 @@ int Boards::getFlashSize(Type board)
     case BOARD_JUMPER_TLITE:
     case BOARD_RADIOMASTER_TX12:
     case BOARD_RADIOMASTER_T8:
+    case BOARD_HITEC_GCS: //HITECTODO: should be ok??
       return FSIZE_TARANIS;
     case BOARD_HORUS_X12S:
     case BOARD_X10:
@@ -186,6 +190,18 @@ SwitchInfo Boards::getSwitchInfo(Board::Type board, int index)
     };
     if (index < DIM(switches))
       return switches[index];
+  }
+  else if (IS_HITEC_GCS(board)) {
+    const Board::SwitchInfo switches[] = {
+      {SWITCH_2POS,   "SA"},
+      {SWITCH_3POS,   "SB"},
+      {SWITCH_3POS,   "SC"},
+      {SWITCH_2POS,   "SD"},
+      {SWITCH_2POS,   "SE"}
+    };
+    if (index < DIM(switches))
+      return switches[index];
+    
   }
   else if (IS_TARANIS_XLITE(board) || IS_JUMPER_TLITE(board)) {
     const Board::SwitchInfo switches[] = {
@@ -326,6 +342,8 @@ int Boards::getCapability(Board::Type board, Board::Capability capability)
     case Pots:
       if (IS_TARANIS_X9LITE(board))
         return 1;
+      else if(IS_HITEC_GCS(board))
+        return 1;
       else if (IS_JUMPER_TLITE(board))
         return 0;
       else if (IS_TARANIS_SMALL(board))
@@ -346,7 +364,9 @@ int Boards::getCapability(Board::Type board, Board::Capability capability)
         return getCapability(board, Pots);
 
     case Sliders:
-      if (IS_HORUS_X12S(board) || IS_TARANIS_X9E(board))
+      if (IS_HITEC_GCS(board))
+        return 2;
+      else if (IS_HORUS_X12S(board) || IS_TARANIS_X9E(board))
         return 4;
       else if (IS_TARANIS_X9D(board) || IS_HORUS_X10(board) || IS_FAMILY_T16(board))
         return 2;
@@ -375,7 +395,9 @@ int Boards::getCapability(Board::Type board, Board::Capability capability)
       return IS_HORUS_OR_TARANIS(board) ? 6 : 0;
 
     case Switches:
-      if (IS_TARANIS_X9E(board))
+      if (IS_HITEC_GCS(board))
+        return 5;
+      else if (IS_TARANIS_X9E(board))
         return 18;
       else if (board == Board::BOARD_TARANIS_X9LITE)
         return 5;
@@ -400,7 +422,7 @@ int Boards::getCapability(Board::Type board, Board::Capability capability)
       else
         return 7;
 
-    case FactoryInstalledSwitches:
+    case FactoryInstalledSwitches: //HITECTODO: what does this mean?
       if (IS_TARANIS_X9E(board))
         return 8;
       else if (IS_JUMPER_TLITE(board))
@@ -413,12 +435,14 @@ int Boards::getCapability(Board::Type board, Board::Capability capability)
         return getCapability(board, Switches);
 
     case SwitchPositions:
-      if (IS_HORUS_OR_TARANIS(board))
+      if (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board))
         return getCapability(board, Switches) * 3;
       else
         return 9;
 
     case NumTrims:
+      if(IS_HITEC_GCS(board)) //HITECTODO: need to make sure trims are completely disabled, not taking up space
+        return 4;
       if (IS_FAMILY_HORUS_OR_T16(board))
         return 6;
       else
@@ -469,6 +493,15 @@ QString Boards::getAnalogInputName(Board::Type board, int index)
       "P1",
       "P2",
       "P3"
+    };
+    if (index < DIM(pots))
+      return pots[index];
+  }
+  else if (IS_HITEC_GCS(board)) {
+    const QString pots[] = {
+      "P1",
+      "LS",
+      "RS"
     };
     if (index < DIM(pots))
       return pots[index];
@@ -594,6 +627,8 @@ QString Boards::getBoardName(Board::Type board)
       return "Radiomaster TX12";
     case BOARD_RADIOMASTER_T8:
       return "Radiomaster T8";
+    case BOARD_HITEC_GCS:
+      return "Hitec GCS";
     default:
       return tr("Unknown");
   }

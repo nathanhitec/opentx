@@ -71,9 +71,9 @@ QString RawSwitch::toString(Board::Type board, const GeneralSettings * const gen
     QString swName;
     div_t qr;
     switch(type) {
-      case SWITCH_TYPE_SWITCH:
-        if (IS_HORUS_OR_TARANIS(board)) {
-          qr = div(index-1, 3);
+      case SWITCH_TYPE_SWITCH: 
+        if (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board)) {
+          qr = div(index-1, 3); 
           if (generalSettings)
             swName = QString(generalSettings->switchName[qr.quot]);
           if (swName.isEmpty())
@@ -158,8 +158,8 @@ bool RawSwitch::isAvailable(const ModelData * const model, const GeneralSettings
   if (type == SWITCH_TYPE_TRIM && abs(index) > b.getCapability(Board::NumTrimSwitches))
     return false;
 
-  if (gs) {
-    if (type == SWITCH_TYPE_SWITCH && IS_HORUS_OR_TARANIS(board) && !gs->switchPositionAllowedTaranis(abs(index)))
+  if (gs) { //
+    if (type == SWITCH_TYPE_SWITCH && ( IS_HITEC_GCS(board) || IS_HORUS_OR_TARANIS(board)) && !gs->switchPositionAllowedTaranis(abs(index)))
       return false;
 
     if (type == SWITCH_TYPE_MULTIPOS_POT) {

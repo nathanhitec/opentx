@@ -129,6 +129,8 @@ QString FirmwareInterface::getFlavour() const
     return "opentx-x9d";
   else if (flavour == "opentx-horus")
     return "opentx-x12s";
+  else if (flavour == "opentx-gcsv2")
+    return "opentx-gcsv2"
   else
     return flavour;
 }

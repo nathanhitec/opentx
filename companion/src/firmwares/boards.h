@@ -39,6 +39,7 @@ namespace Board {
     BOARD_TARANIS_X7_ACCESS,
     BOARD_TARANIS_X9D,
     BOARD_TARANIS_X9DP,
+    BOARD_HITEC_GCS, 
     BOARD_TARANIS_X9DP_2019,
     BOARD_TARANIS_X9E,
     BOARD_HORUS_X12S,
@@ -188,6 +189,8 @@ class Boards
     Board::Type m_boardType;
 };
 
+
+//HITECTODO: need to figure out what the hitec gcs should be encompassed under
 // temporary aliases for transition period, use Boards class instead.
 #define getBoardCapability(b__, c__)   Boards::getCapability(b__, c__)
 
@@ -219,6 +222,11 @@ inline bool IS_JUMPER_T16(Board::Type board)
 inline bool IS_JUMPER_T18(Board::Type board)
 {
   return board == Board::BOARD_JUMPER_T18;
+}
+
+inline bool IS_HITEC_GCS(Board::Type board)
+{
+  return board == Board::BOARD_HITEC_GCS;
 }
 
 inline bool IS_RADIOMASTER_TX16S(Board::Type board)
@@ -333,7 +341,7 @@ inline bool IS_HORUS_OR_TARANIS(Board::Type board)
 
 inline bool IS_STM32(Board::Type board)
 {
-  return IS_TARANIS(board) || IS_FAMILY_HORUS_OR_T16(board);
+  return IS_TARANIS(board) || IS_FAMILY_HORUS_OR_T16(board) || IS_HITEC_GCS(board);
 }
 
 inline bool IS_ARM(Board::Type board)
@@ -343,7 +351,7 @@ inline bool IS_ARM(Board::Type board)
 
 inline bool HAS_LARGE_LCD(Board::Type board)
 {
-  return IS_FAMILY_HORUS_OR_T16(board) || IS_TARANIS_X9(board);
+  return IS_FAMILY_HORUS_OR_T16(board) || IS_TARANIS_X9(board) || IS_HITEC_GCS(board);
 }
 
 inline bool HAS_EXTERNAL_ANTENNA(Board::Type board)

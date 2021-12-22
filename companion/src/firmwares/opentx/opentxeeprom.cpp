@@ -56,7 +56,7 @@ inline int MAX_SWITCHES(Board::Type board, int version)
 
 inline int MAX_SWITCHES_POSITION(Board::Type board, int version)
 {
-  if (IS_HORUS_OR_TARANIS(board)) {
+  if (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board)) {
     return MAX_SWITCHES(board, version) * 3;
   }
   else {
@@ -125,7 +125,7 @@ inline int SLIDERS_CONFIG_SIZE(Board::Type board, int version)
 
 inline int SWITCHES_CONFIG_SIZE(Board::Type board, int version)
 {
-  if (IS_TARANIS_X9E(board))
+  if (IS_TARANIS_X9E(board)  || IS_HITEC_GCS(board))
     return 64;
 
   if (IS_FAMILY_HORUS_OR_T16(board))
@@ -151,7 +151,7 @@ inline int MAX_MOUSE_ANALOG_SOURCES(Board::Type board, int version)
 #define MAX_MIXERS(board, version)            64
 #define MAX_CHANNELS(board, version)          32
 #define MAX_TRIMS(board)                      (Boards::getCapability(board, Board::NumTrims))
-#define MAX_EXPOS(board, version)             (IS_HORUS_OR_TARANIS(board) ? 64 : 32)
+#define MAX_EXPOS(board, version)             (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board) ? 64 : 32)
 #define MAX_LOGICAL_SWITCHES(board, version)  (version >= 218 ? 64 : 32)
 #define MAX_CUSTOM_FUNCTIONS(board, version)  64
 #define MAX_CURVES(board, version)            ((version >= 219 || HAS_LARGE_LCD(board)) ? 32 : 16)
@@ -163,8 +163,8 @@ inline int MAX_MOUSE_ANALOG_SOURCES(Board::Type board, int version)
 #define MAX_AUX_TRIMS(board)                  (IS_FAMILY_HORUS_OR_T16(board) ? 2 : 0)
 
 inline int switchIndex(int i, Board::Type board, unsigned int version)
-{
-  if (!IS_HORUS_OR_TARANIS(board))
+{//!(IS_HITEC_GCS || 
+  if (IS_HORUS_OR_TARANIS(board))
     return (i<=3 ? i+3 : (i<=6 ? i-3 : i));
   else
     return i;
@@ -826,7 +826,7 @@ class MixField: public TransformedField {
         else
           internalField.Append(new ZCharField<6>(this, mix.name));
       }
-      else if (IS_TARANIS(board)) {
+      else if (IS_TARANIS(board) || IS_HITEC_GCS(board)) {
         internalField.Append(new UnsignedField<8>(this, _destCh));
         internalField.Append(new UnsignedField<9>(this, mix.flightModes));
         internalField.Append(new UnsignedField<2>(this, (unsigned int &)mix.mltpx));
@@ -1494,7 +1494,7 @@ class ArmCustomFunctionField: public TransformedField {
         internalField.Append(new ConversionField< UnsignedField<8> >(this, _func, &functionsConversionTable, "Function", DataField::tr("OpenTX on this board doesn't accept this function")));
       }
 
-      if (IS_TARANIS(board))
+      if (IS_TARANIS(board) || IS_HITEC_GCS(board))
         internalField.Append(new CharField<8>(this, _param, false));
       else
         internalField.Append(new CharField<6>(this, _param, false));
@@ -2369,21 +2369,23 @@ OpenTxModelData::OpenTxModelData(ModelData & modelData, Board::Type board, unsig
 
   if (IS_FAMILY_HORUS_OR_T16(board))
     internalField.Append(new SwitchesWarningField<32>(this, modelData.switchWarningStates, board, version));
-  else if (IS_TARANIS_X9E(board))
+  else if (IS_TARANIS_X9E(board) || IS_HITEC_GCS(board))
     internalField.Append(new SwitchesWarningField<64>(this, modelData.switchWarningStates, board, version));
-  else if (version >= 219 && IS_TARANIS_X9D(board))
+  else if (version >= 219 && (IS_TARANIS_X9D(board) ))
     internalField.Append(new SwitchesWarningField<32>(this, modelData.switchWarningStates, board, version));
   else if (IS_TARANIS(board))
     internalField.Append(new SwitchesWarningField<16>(this, modelData.switchWarningStates, board, version));
   else
     internalField.Append(new SwitchesWarningField<8>(this, modelData.switchWarningStates, board, version));
 
-  if (IS_TARANIS_X9E(board))
+  if (IS_TARANIS_X9E(board) || IS_HITEC_GCS(board))
     internalField.Append(new UnsignedField<32>(this, modelData.switchWarningEnable));
-  else if (version >= 219 && IS_TARANIS_X9D(board))
+  else if (version >= 219 && IS_TARANIS_X9D(board) )
     internalField.Append(new UnsignedField<16>(this, modelData.switchWarningEnable));
   else if (!IS_FAMILY_HORUS_OR_T16(board))
     internalField.Append(new UnsignedField<8>(this, modelData.switchWarningEnable));
+  else
+    internalField.Append(new UnsignedField<32>(this, modelData.switchWarningEnable));
 
   for (int i=0; i<MAX_GVARS(board, version); i++) {
     if (version >= 218) {
@@ -2410,11 +2412,11 @@ OpenTxModelData::OpenTxModelData(ModelData & modelData, Board::Type board, unsig
     internalField.Append(new VarioField(this, modelData.frsky, board, version, variant));
     internalField.Append(new UnsignedField<8>(this, modelData.rssiSource));
 
-    if (IS_TARANIS_X9(board)) {
+    if (IS_TARANIS_X9(board) || IS_HITEC_GCS(board)) {
       internalField.Append(new UnsignedField<8>(this, modelData.frsky.voltsSource));
       internalField.Append(new UnsignedField<8>(this, modelData.frsky.altitudeSource));
     }
-
+    
     internalField.Append(new BoolField<1>(this, modelData.rssiAlarms.disabled));
     internalField.Append(new SpareBitsField<1>(this));
     internalField.Append(new ConversionField<SignedField<6> >(this, modelData.rssiAlarms.warning, -45));
@@ -2516,7 +2518,7 @@ OpenTxModelData::OpenTxModelData(ModelData & modelData, Board::Type board, unsig
     internalField.Append(new SensorField(this, modelData, modelData.sensorData[i], board, version));
   }
 
-  if (IS_TARANIS_X9E(board)) {
+  if (IS_TARANIS_X9E(board) || IS_HITEC_GCS(board)) {
     internalField.Append(new UnsignedField<8>(this, modelData.toplcdTimer));
   }
 
@@ -2652,7 +2654,8 @@ OpenTxGeneralData::OpenTxGeneralData(GeneralSettings & generalData, Board::Type 
 
   internalField.Append(new UnsignedField<2>(this, generalData.stickMode));
   internalField.Append(new SignedField<5>(this, generalData.timezone));
-  if (IS_HORUS_OR_TARANIS(board)) {
+
+  if (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board)) {
     internalField.Append(new BoolField<1>(this, generalData.adjustRTC));
   }
   else {
@@ -2661,13 +2664,16 @@ OpenTxGeneralData::OpenTxGeneralData(GeneralSettings & generalData, Board::Type 
 
   internalField.Append(new UnsignedField<8>(this, generalData.inactivityTimer));
   internalField.Append(new UnsignedField<3>(this, generalData.telemetryBaudrate));
-  if (IS_FAMILY_HORUS_OR_T16(board))
+
+  if (IS_FAMILY_HORUS_OR_T16(board) )
     internalField.Append(new SpareBitsField<3>(this));
-  else if (IS_TARANIS(board))
+  else if (IS_TARANIS(board) || IS_HITEC_GCS(board))
     internalField.Append(new SignedField<3>(this, generalData.splashDuration));
   else
     internalField.Append(new UnsignedField<3>(this, generalData.splashMode)); // TODO
+
   internalField.Append(new SignedField<2>(this, (int &)generalData.hapticMode));
+
 
   internalField.Append(new SignedField<8>(this, generalData.switchesDelay));
 
@@ -2676,11 +2682,11 @@ OpenTxGeneralData::OpenTxGeneralData(GeneralSettings & generalData, Board::Type 
   internalField.Append(new SignedField<8>(this, generalData.PPM_Multiplier));
   internalField.Append(new SignedField<8>(this, generalData.hapticLength));
 
-  if (version < 218 || (!IS_TARANIS(board) && !IS_FAMILY_HORUS_OR_T16(board))) {
+  if (version < 218 || (!IS_HITEC_GCS(board) && !IS_TARANIS(board) && !IS_FAMILY_HORUS_OR_T16(board))) {
     internalField.Append(new UnsignedField<8>(this, generalData.reNavigation));
   }
 
-  if (!IS_TARANIS(board) && !IS_FAMILY_HORUS_OR_T16(board)) {
+  if (!IS_HITEC_GCS(board) && !IS_TARANIS(board) && !IS_FAMILY_HORUS_OR_T16(board)) {
     internalField.Append(new UnsignedField<8>(this, generalData.stickReverse));
   }
 
@@ -2713,7 +2719,7 @@ OpenTxGeneralData::OpenTxGeneralData(GeneralSettings & generalData, Board::Type 
   if (version < 218) internalField.Append(new UnsignedField<8>(this, generalData.rotarySteps));
   internalField.Append(new UnsignedField<2>(this, generalData.countryCode));
 
-  if (version >= 219 && IS_HORUS_OR_TARANIS(board)) {
+  if (version >= 219 && IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board)) {
     internalField.Append(new SignedField<3>(this, generalData.pwrOnSpeed, "Power On Speed"));
     internalField.Append(new SignedField<3>(this, generalData.pwrOffSpeed, "Power Off Speed"));
   }
@@ -2824,7 +2830,7 @@ OpenTxGeneralData::OpenTxGeneralData(GeneralSettings & generalData, Board::Type 
     internalField.Append(new UnsignedField<8>(this, generalData.rotarySteps));
   }
 
-  if (IS_TARANIS_X9E(board))
+  if (IS_TARANIS_X9E(board) || IS_HITEC_GCS(board))
     internalField.Append(new SpareBitsField<64>(this)); // switchUnlockStates
   else if (version >= 219 && IS_TARANIS_X9D(board))
     internalField.Append(new SpareBitsField<32>(this)); // switchUnlockStates
@@ -2855,7 +2861,7 @@ OpenTxGeneralData::OpenTxGeneralData(GeneralSettings & generalData, Board::Type 
     }
     internalField.Append(new CharField<17>(this, generalData.currModelFilename, true, "Current model filename"));
   }
-  else if (IS_TARANIS(board)) {
+  else if (IS_TARANIS(board) || IS_HITEC_GCS(board)) {
     for (int i=0; i<SWITCHES_CONFIG_SIZE(board, version) / 2; i++) {
       if (i < MAX_SWITCHES(board, version))
         internalField.Append(new UnsignedField<2>(this, generalData.switchConfig[i]));
@@ -2881,7 +2887,7 @@ OpenTxGeneralData::OpenTxGeneralData(GeneralSettings & generalData, Board::Type 
     internalField.Append(new UnsignedField<7>(this, generalData.backlightOffBright));
     internalField.Append(new ZCharField<10>(this, generalData.bluetoothName, "Bluetooth name"));
   }
-  else if (IS_TARANIS_X9E(board) || (version >= 219 && (IS_TARANIS_X7(board) || IS_TARANIS_X9D(board) || IS_TARANIS_XLITE(board)))) {
+  else if ((IS_TARANIS_X9E(board) || IS_HITEC_GCS(board)) || (version >= 219 && (IS_TARANIS_X7(board) || IS_TARANIS_X9D(board) || IS_TARANIS_XLITE(board)))) {
     internalField.Append(new SpareBitsField<8>(this));
     internalField.Append(new ZCharField<10>(this, generalData.bluetoothName, "Bluetooth name"));
   }

@@ -323,8 +323,8 @@ bool RawSource::isAvailable(const ModelData * const model, const GeneralSettings
     int gsIdx = 0;
     if (type == SOURCE_TYPE_STICK && ((isPot(&gsIdx) && !gs->isPotAvailable(gsIdx)) || (isSlider(&gsIdx) && !gs->isSliderAvailable(gsIdx))))
       return false;
-
-    if (type == SOURCE_TYPE_SWITCH && IS_HORUS_OR_TARANIS(board) && !gs->switchSourceAllowedTaranis(index))
+//
+    if (type == SOURCE_TYPE_SWITCH && ( IS_HITEC_GCS(board) || IS_HORUS_OR_TARANIS(board)) && !gs->switchSourceAllowedTaranis(index))
       return false;
   }
 

@@ -316,8 +316,8 @@ void getFlightmodeAudioFile(char * filename, int index, unsigned int event)
 void getSwitchAudioFile(char * filename, swsrc_t index)
 {
   char * str = getModelAudioPath(filename);
-
-#if defined(PCBTARANIS) || defined(PCBHORUS)
+//defined(PCBTARANIS) ||
+#if defined(PCBHORUS)
   if (index <= SWSRC_LAST_SWITCH) {
     div_t swinfo = switchInfo(index);
     *str++ = 'S';
@@ -405,6 +405,7 @@ void referenceModelAudioFiles()
       }
 
       // Switches Audio Files <switchname>-[up|mid|down].wav
+      /*
       for (int i=SWSRC_FIRST_SWITCH; i<=SWSRC_LAST_SWITCH+NUM_XPOTS*XPOTS_MULTIPOS_COUNT && !found; i++) {
         getSwitchAudioFile(path, i);
         // TRACE("referenceModelAudioFiles(): searching for %s in %s (%d)", path, fno.fname, i);
@@ -414,7 +415,7 @@ void referenceModelAudioFiles()
           TRACE("\tfound: %s", filename);
         }
       }
-
+      */
       // Logical Switches Audio Files <switchname>-[on|off].wav
       for (int i=0; i<MAX_LOGICAL_SWITCHES && !found; i++) {
         for (int event=0; event<2; event++) {

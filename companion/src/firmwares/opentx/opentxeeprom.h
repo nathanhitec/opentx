@@ -30,6 +30,7 @@
 #define FRSKY_VARIANT                  0x0002
 #define M128_VARIANT                   0x8000
 #define TARANIS_X9E_VARIANT            0x8000
+#define HITEC_GCS_VARIANT              0x8000
 #define TARANIS_X7_VARIANT             0x4000
 #define TARANIS_XLITE_VARIANT          0x2000
 #define TARANIS_XLITES_VARIANT         0x1000

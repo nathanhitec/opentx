@@ -58,6 +58,8 @@ OpenTxEepromInterface::~OpenTxEepromInterface()
 const char * OpenTxEepromInterface::getName()
 {
   switch (board) {
+    case BOARD_HITEC_GCS:
+      return "OpenTX for Hitec GCS";
     case BOARD_JUMPER_T12:
       return "OpenTX for Jumper T12";
     case BOARD_JUMPER_TLITE:
@@ -319,6 +321,9 @@ int OpenTxEepromInterface::save(uint8_t * eeprom, const RadioData & radioData, u
   if (IS_TARANIS_X9E(board)) {
     variant |= TARANIS_X9E_VARIANT;
   }
+  else if (IS_HITEC_GCS(board)) {
+    variant |= HITEC_GCS_VARIANT;
+  }
   else if (IS_TARANIS_X9LITES(board)) {
     variant |= TARANIS_X9LITES_VARIANT;
   }
@@ -446,7 +451,7 @@ int OpenTxFirmware::getCapability(::Capability capability)
     case Imperial:
       return 0;
     case ModelImage:
-      return (board == BOARD_TARANIS_X9D || IS_TARANIS_PLUS(board) || board == BOARD_TARANIS_X9DP_2019 || IS_FAMILY_HORUS_OR_T16(board));
+      return (board == BOARD_TARANIS_X9D || IS_TARANIS_PLUS(board) || IS_HITEC_GCS(board) || board == BOARD_TARANIS_X9DP_2019 || IS_FAMILY_HORUS_OR_T16(board));
     case HasBeeper:
       return false;
     case HasPxxCountry:
@@ -464,12 +469,12 @@ int OpenTxFirmware::getCapability(::Capability capability)
     case FlightModesHaveFades:
       return 1;
     case Heli:
-      if (IS_HORUS_OR_TARANIS(board))
+      if (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board))
         return id.contains("noheli") ? 0 : 1;
       else
         return id.contains("heli") ? 1 : 0;
     case Gvars:
-      if (IS_HORUS_OR_TARANIS(board))
+      if (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board))
         return id.contains("nogvars") ? 0 : 9;
       else if (id.contains("gvars"))
         return 9;
@@ -478,7 +483,7 @@ int OpenTxFirmware::getCapability(::Capability capability)
     case ModelName:
       return (IS_FAMILY_HORUS_OR_T16(board) ? 15 : (HAS_LARGE_LCD(board) ? 12 : 10));
     case FlightModesName:
-      return (IS_HORUS_OR_TARANIS(board) ? 10 : 6);
+      return ((IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board)) ? 10 : 6);
     case GvarsName:
       return 3;
     case GvarsInCS:
@@ -527,7 +532,7 @@ int OpenTxFirmware::getCapability(::Capability capability)
     case Haptic:
       return board != Board::BOARD_TARANIS_X9D || id.contains("haptic");
     case ModelTrainerEnable:
-      if (IS_HORUS_OR_TARANIS(board) && board!=Board::BOARD_TARANIS_XLITE)
+      if ((IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board)) && board!=Board::BOARD_TARANIS_XLITE)
         return 1;
       else
         return 0;
@@ -560,7 +565,7 @@ int OpenTxFirmware::getCapability(::Capability capability)
     case HasExpoNames:
       return (IS_TARANIS_X9(board) ? 8 : 6);
     case HasNoExpo:
-      return (IS_HORUS_OR_TARANIS(board) ? false : true);
+      return ((IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board)) ? false : true);
     case ChannelsName:
       return (HAS_LARGE_LCD(board) ? 6 : 4);
     case HasCvNames:
@@ -581,13 +586,13 @@ int OpenTxFirmware::getCapability(::Capability capability)
     case TelemetryCustomScreensFieldsPerLine:
       return HAS_LARGE_LCD(board) ? 3 : 2;
     case NoTelemetryProtocol:
-      return IS_HORUS_OR_TARANIS(board) ? 1 : 0;
+      return IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board) ? 1 : 0;
     case TelemetryUnits:
       return 0;
     case TelemetryMaxMultiplier:
       return 32;
     case PPMCenter:
-      return (IS_HORUS_OR_TARANIS(board) ? 500 : (id.contains("ppmca") ? 125 : 0));
+      return ((IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board)) ? 500 : (id.contains("ppmca") ? 125 : 0));
     case PPMUnitMicroseconds:
       return id.contains("ppmus") ? 1 : 0;
     case SYMLimits:
@@ -631,7 +636,7 @@ int OpenTxFirmware::getCapability(::Capability capability)
         return 480;
       else if (IS_TARANIS_SMALL(board))
         return 128;
-      else if (IS_TARANIS(board))
+      else if (IS_TARANIS(board) || IS_HITEC_GCS(board))
         return 212;
       else
         return 128;
@@ -645,16 +650,16 @@ int OpenTxFirmware::getCapability(::Capability capability)
         return 16;
       else if (IS_TARANIS_SMALL(board))
         return 1;
-      else if (IS_TARANIS(board))
+      else if (IS_TARANIS(board) ||  IS_HITEC_GCS(board))
         return 4;
       else
         return 1;
     case GetThrSwitch:
-      return (IS_HORUS_OR_TARANIS(board) ? SWITCH_SF1 : SWITCH_THR);
+      return (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board) ? SWITCH_SF1 : SWITCH_THR); //HITECTODO: might be different
     case HasDisplayText:
       return 1;
     case HasTopLcd:
-      return IS_TARANIS_X9E(board) ? 1 : 0;
+      return IS_TARANIS_X9E(board) || IS_HITEC_GCS(board) ? 1 : 0;
     case GlobalFunctions:
       return 64;
     case VirtualInputs:
@@ -666,11 +671,11 @@ int OpenTxFirmware::getCapability(::Capability capability)
     case RtcTime:
       return 1;
     case LuaScripts:
-      return IS_HORUS_OR_TARANIS(board) && id.contains("lua") ? 7 : 0;
+      return (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board)) && id.contains("lua") ? 7 : 0;
     case LuaInputsPerScript:
-      return IS_HORUS_OR_TARANIS(board) ? 10 : 0;
+      return IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board) ? 10 : 0;
     case LuaOutputsPerScript:
-      return IS_HORUS_OR_TARANIS(board) ? 6 : 0;
+      return IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board) ? 6 : 0;
     case LimitsPer1000:
     case EnhancedCurves:
       return 1;
@@ -678,7 +683,7 @@ int OpenTxFirmware::getCapability(::Capability capability)
       return true;
     case HasMahPersistent:
       return true;
-    case SimulatorVariant:
+    case SimulatorVariant: //HITECTODO: do I need to supply some type of simulator?
       if (IS_TARANIS_X9E(board))
         return TARANIS_X9E_VARIANT;
       else if (IS_TARANIS_X9LITES(board))
@@ -707,9 +712,9 @@ int OpenTxFirmware::getCapability(::Capability capability)
       return 1;
     case HasInputDiff:
     case HasMixerExpo:
-      return (IS_HORUS_OR_TARANIS(board) ? true : false);
+      return (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board) ? true : false);
     case HasBatMeterRange:
-      return (IS_HORUS_OR_TARANIS(board) ? true : id.contains("battgraph"));
+      return (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board) ? true : id.contains("battgraph"));
     case DangerousFunctions:
       return id.contains("danger") ? 1 : 0;
     case HasModelCategories:
@@ -737,7 +742,7 @@ QString OpenTxFirmware::getAnalogInputName(unsigned int index)
 
 QTime OpenTxFirmware::getMaxTimerStart()
 {
-  if (IS_HORUS_OR_TARANIS(board))
+  if (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board))
     return QTime(23, 59, 59);
   else
     return QTime(8, 59, 59);
@@ -745,7 +750,7 @@ QTime OpenTxFirmware::getMaxTimerStart()
 
 bool OpenTxFirmware::isAvailable(PulsesProtocol proto, int port)
 {
-  if (IS_HORUS_OR_TARANIS(board)) {
+  if (IS_HORUS_OR_TARANIS(board) || IS_HITEC_GCS(board)) {
     switch (port) {
       case 0:
         switch (proto) {
@@ -930,6 +935,11 @@ bool OpenTxEepromInterface::checkVariant(unsigned int version, unsigned int vari
   bool variantError = false;
   if (IS_TARANIS_X9E(board)) {
     if (variant != TARANIS_X9E_VARIANT) {
+      variantError = true;
+    }
+  }
+  else if(IS_HITEC_GCS(board)) {
+    if(variant != HITEC_GCS_VARIANT){
       variantError = true;
     }
   }
@@ -1171,6 +1181,7 @@ void addOpenTxFrskyOptions(OpenTxFirmware * firmware)
   firmware->addOption("lua", Firmware::tr("Enable Lua custom scripts screen"));
 }
 
+
 void addOpenTxTaranisOptions(OpenTxFirmware * firmware)
 {
   addOpenTxFrskyOptions(firmware);
@@ -1198,6 +1209,12 @@ void addOpenTxArm9xOptions(OpenTxFirmware * firmware, bool dblkeys = true)
 void registerOpenTxFirmwares()
 {
   OpenTxFirmware * firmware;
+
+  /* Hitec GCS board */
+  firmware = new OpenTxFirmware("opentx-hitec", Firmware::tr("Hitec GCS V2"), BOARD_HITEC_GCS);
+  addOpenTxTaranisOptions(firmware);
+  registerOpenTxFirmware(firmware);
+  addOpenTxRfOptions(firmware, AFHDS3);
 
   /* FrSky Taranis X9D+ board */
   firmware = new OpenTxFirmware("opentx-x9d+", Firmware::tr("FrSky Taranis X9D+"), BOARD_TARANIS_X9DP);

@@ -106,6 +106,11 @@ GeneralSettings::GeneralSettings()
     vBatMin = -30; //6V
     vBatMax = -40; //8V
   }
+  else if(IS_HITEC_GCS(board)) {
+    vBatWarn = 65; //HITECTODO: might want to change later
+    vBatMin = -30;
+    vBatMax = -40;
+  }
 
   setDefaultControlTypes(board);
 
@@ -271,6 +276,9 @@ void GeneralSettings::setDefaultControlTypes(Board::Type board)
     potConfig[0] = Board::POT_WITH_DETENT;
     potConfig[1] = Board::POT_WITH_DETENT;
   }
+  else if (IS_HITEC_GCS(board)) {
+    potConfig[0] = Board::POT_WITHOUT_DETENT;
+  }
   else {
     potConfig[0] = Board::POT_WITHOUT_DETENT;
     potConfig[1] = Board::POT_WITHOUT_DETENT;
@@ -284,6 +292,10 @@ void GeneralSettings::setDefaultControlTypes(Board::Type board)
     sliderConfig[3] = Board::SLIDER_WITH_DETENT;
   }
   else if (IS_TARANIS_X9(board) || IS_HORUS_X10(board) || IS_FAMILY_T16(board)) {
+    sliderConfig[0] = Board::SLIDER_WITH_DETENT;
+    sliderConfig[1] = Board::SLIDER_WITH_DETENT;
+  }
+  else if (IS_HITEC_GCS(board)) {
     sliderConfig[0] = Board::SLIDER_WITH_DETENT;
     sliderConfig[1] = Board::SLIDER_WITH_DETENT;
   }

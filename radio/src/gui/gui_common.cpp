@@ -303,8 +303,8 @@ bool isSwitchAvailable(int swtch, SwitchContext context)
     }
     negative = true;
     swtch = -swtch;
+    
   }
-
 #if defined(PCBSKY9X)
   if (swtch >= SWSRC_FIRST_SWITCH && swtch <= SWSRC_LAST_SWITCH) {
     UNUSED(negative);
@@ -317,6 +317,7 @@ bool isSwitchAvailable(int swtch, SwitchContext context)
       return false;
     }
     if (!IS_CONFIG_3POS(swinfo.quot)) {
+      
       if (negative) {
         return false;
       }

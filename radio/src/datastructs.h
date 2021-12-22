@@ -887,6 +887,7 @@ static inline void check_struct()
   CHKSIZE(LogicalSwitchData, 9);
   CHKSIZE(CustomFunctionData, 11);
   CHKSIZE(FlightModeData, 40);
+  
   CHKSIZE(TimerData, 16);
   CHKSIZE(SwashRingData, 8);
   CHKSIZE(FrSkyBarData, 6);
@@ -956,7 +957,9 @@ static inline void check_struct()
   CHKSIZE(ModelData, 6157);
 #elif defined(PCBX9E)
   CHKSIZE(RadioData, 865);
-  CHKSIZE(ModelData, 6609);
+  //CHKSIZE(ModelData, 6609);
+  CHKSIZE(ModelData, 6329);
+  //CHKSIZE(ModelData, 6537);
 #elif defined(PCBX9D) || defined(PCBX9DP)
   CHKSIZE(RadioData, 898);
   CHKSIZE(ModelData, 6604);

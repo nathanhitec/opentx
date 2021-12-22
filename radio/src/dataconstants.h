@@ -59,7 +59,7 @@
   #define MAX_SCRIPTS                  7
   #define MAX_INPUTS                   32
   #define MAX_TRAINER_CHANNELS         16
-  #define MAX_TELEMETRY_SENSORS        60
+  #define MAX_TELEMETRY_SENSORS        40
 #elif defined(PCBTARANIS)
   #define MAX_MODELS                   60
   #define MAX_OUTPUT_CHANNELS          32 // number of real output channels CH1-CH32

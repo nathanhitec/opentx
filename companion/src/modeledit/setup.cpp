@@ -414,7 +414,7 @@ void ModulePanel::update()
       case PULSES_DSM2:
       case PULSES_DSMX:
         mask |= MASK_CHANNELS_RANGE | MASK_RX_NUMBER;
-        module.channelsCount = 6;
+        module.channelsCount = 12; //HITECTODO: 12? or keep 6
         max_rx_num = 20;
         break;
       case PULSES_CROSSFIRE:
