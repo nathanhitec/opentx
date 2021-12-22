@@ -64,6 +64,8 @@ void init5msTimer();
 void initPiUART();
 void sendRCChannelsOverMavlink(uint16_t* channel_data);
 void sendHeartbeat();
+void sendPulse();
+void initPulse();
 void MavlinkSendBuffer(const uint8_t * data, uint16_t size);
 // PCBREV driver
 enum {
@@ -289,11 +291,11 @@ enum EnumSwitchesPositions
   #define STORAGE_NUM_SWITCHES          5
 
   //TODO: might have to change switch, pots and sliders config
-  #define DEFAULT_SWITCH_CONFIG         (SWITCH_TOGGLE << 14) + (SWITCH_3POS << 12) + (SWITCH_2POS << 10) + (SWITCH_3POS << 8) + (SWITCH_3POS << 6) + (SWITCH_3POS << 4) + (SWITCH_3POS << 2) + (SWITCH_3POS << 0)
-  #define DEFAULT_POTS_CONFIG           (POT_WITH_DETENT << 0) + (POT_WITH_DETENT << 2);
-  #define DEFAULT_SLIDERS_CONFIG        (SLIDER_WITH_DETENT << 3) + (SLIDER_WITH_DETENT << 2) + (SLIDER_WITH_DETENT << 1) + (SLIDER_WITH_DETENT << 0)
+  //#define DEFAULT_SWITCH_CONFIG         (SWITCH_2POS << 8) + (SWITCH_2POS << 6) + (SWITCH_3POS << 4) + (SWITCH_3POS << 2) + (SWITCH_2POS << 0);
+  //#define DEFAULT_POTS_CONFIG           (POT_WITH_DETENT << 0) + (POT_WITH_DETENT << 2);
+  //#define DEFAULT_SLIDERS_CONFIG        (SLIDER_WITH_DETENT << 1) + (SLIDER_WITH_DETENT << 0)
 
-#define STORAGE_NUM_SWITCHES_POSITIONS  (STORAGE_NUM_SWITCHES * 3)
+#define STORAGE_NUM_SWITCHES_POSITIONS  (15)
 
 void keysInit();
 uint32_t switchState(uint8_t index);
@@ -340,13 +342,13 @@ enum Analogs {
 #define STORAGE_NUM_POTS              1
 #define STORAGE_NUM_SLIDERS           2
 
-#define NUM_XPOTS                     STORAGE_NUM_POTS
+#define NUM_XPOTS                     0//STORAGE_NUM_POTS
 
 #define NUM_MOUSE_ANALOGS             0
 #define STORAGE_NUM_MOUSE_ANALOGS     0
 
 #define NUM_TRIMS                     4
-#define NUM_TRIMS_KEYS                4
+#define NUM_TRIMS_KEYS                4*2
 
 
 #define STICKS_PWM_ENABLED()          false

@@ -301,6 +301,14 @@
    #define PI_USART_IRQHandler            USART2_IRQHandler
 #endif
 
+#if defined(GCSV2)
+    #define LED_PULSE_GPIO              GPIOE
+    #define LED_PULSE_GPIO_PIN          GPIO_Pin_2
+    #define LED_PULSE_LOW()             GPIO_ResetBits(LED_PULSE_GPIO, LED_PULSE_GPIO_PIN)
+    #define LED_PULSE_FLOAT()           GPIO_SetBits(LED_PULSE_GPIO, LED_PULSE_GPIO_PIN)
+
+#endif
+
 
 // Trainer Port
 #if defined(GCSV2)
@@ -450,8 +458,8 @@
 #if defined(GCSV2)
   #define I2C_RCC_AHB1Periph            (RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOD)
   #define I2C_SPI_GPIO                  GPIOB
-  #define I2C_SDA_GPIO_PIN              GPIO_Pin_9  // PB.08
-  #define I2C_SCL_GPIO_PIN              GPIO_Pin_8  // PB.09
+  #define I2C_SDA_GPIO_PIN              GPIO_Pin_9  // PB.09
+  #define I2C_SCL_GPIO_PIN              GPIO_Pin_8  // PB.08
   #define I2C_WP_GPIO                   GPIOB
   #define I2C_WP_GPIO_PIN               GPIO_Pin_7  // PB.07
   #define I2C_SCL_GPIO_PinSource        GPIO_PinSource8

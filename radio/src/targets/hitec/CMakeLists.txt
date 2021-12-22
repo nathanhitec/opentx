@@ -130,6 +130,7 @@ set(TARGET_SRC
   trainer_driver.cpp
   backlight_driver.cpp
   pi_driver.cpp
+  led_pulse.cpp
   debug_driver.cpp
   ../common/arm/stm32/timers_driver.cpp
   ../common/arm/stm32/audio_dac_driver.cpp

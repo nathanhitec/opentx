@@ -39,6 +39,7 @@ void initPiUART() {
 }
 
 
+
 void MavlinkSendBuffer(const uint8_t * data, uint16_t size)
 {
   DMA_InitTypeDef DMA_InitStructure;
@@ -87,6 +88,9 @@ extern "C" void PI_DMA_STREAM_IRQHandler()
     DMA_ClearITPendingBit(PI_USART_TX_DMA_STREAM, PI_DMA_FLAG_TC);
   }
 }
+
+
+
 
 
 void sendHeartbeat(){

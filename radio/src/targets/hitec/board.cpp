@@ -129,6 +129,7 @@ void boardInit()
   audioInit();
   init2MhzTimer();
   initPiUART();
+  initPulse();
   init5msTimer();
   __enable_irq();
   i2cInit();
