@@ -152,7 +152,9 @@ ui(new Ui::GeneralSetup)
   }
 
   if (IS_STM32(firmware->getBoard())) {
-    ui->usbModeCB->setCurrentIndex(generalSettings.usbMode);
+      ui->usbModeLabel->hide();
+      ui->usbModeCB->hide();
+    //ui->usbModeCB->setCurrentIndex(generalSettings.usbMode);
   }
   else {
     ui->usbModeLabel->hide();

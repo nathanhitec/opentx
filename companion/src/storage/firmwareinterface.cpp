@@ -121,16 +121,16 @@ QString FirmwareInterface::seekLabel(const QString & label)
 
 QString FirmwareInterface::getFlavour() const
 {
-  if (flavour == "opentx-taranis-x9e")
-    return "opentx-x9e";
-  else if (flavour == "opentx-x9dp" || flavour == "opentx-taranis-plus")
-    return "opentx-x9d+";
-  else if (flavour == "opentx-taranis")
-    return "opentx-x9d";
-  else if (flavour == "opentx-horus")
-    return "opentx-x12s";
-  else if (flavour == "opentx-gcsv2")
-    return "opentx-gcsv2"
+    if (flavour == "opentx-taranis-x9e")
+        return "opentx-x9e";
+    else if (flavour == "opentx-x9dp" || flavour == "opentx-taranis-plus")
+        return "opentx-x9d+";
+    else if (flavour == "opentx-taranis")
+        return "opentx-x9d";
+    else if (flavour == "opentx-horus")
+        return "opentx-x12s";
+    else if (flavour == "opentx-gcsv2")
+        return "opentx-gcsv2";
   else
     return flavour;
 }
