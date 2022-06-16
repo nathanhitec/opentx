@@ -34,11 +34,14 @@
 
 #define BITLEN_SRXL                 (9*2) //115200 Baud , ~9us per bit, not sure why it's doubled
 
-#define SRXL_CHAN_CENTER            2048
+//#define SRXL_CHAN_CENTER            1000
+
+#define SRXL_CHAN_CENTER          2048
+           		
 
 #define MAVLINK_CHANS               18
 
-#define MAVLINK_VAL_OFFSET          512
+#define MAVLINK_VAL_OFFSET          1500
 
 //PPM_PIN_SERIAL is not defined in current build
 #if defined(PPM_PIN_SERIAL)
@@ -154,15 +157,24 @@ void setupPulsesDSM2()
     int value;
     uint16_t pulse;
     uint16_t crc = 0;
+	
+	float RC_SCALE = 1.429;
+	float MAVLINK_SCALE = .488;
 
     // Start Byte
     SRXLData[0] = SRXL_FRAME_BEGIN_BYTE;
     crc = srxlCRC16(crc, SRXLData[0]);
 
     for (int i = 0; i < SRXL_NORMAL_CHANS; i++) {
-        value = channelOutputs[i] + SRXL_CHAN_CENTER;
-        pulse = limit(0, value, 4095);               //lower limit 0x000 upper limit 0xFFF
-        ChannelData[i] = pulse / 2 + MAVLINK_VAL_OFFSET;
+		value = channelOutputs[i] * RC_SCALE;
+		pulse = value + SRXL_CHAN_CENTER;
+		// // value = channelOutputs[i] + SRXL_CHAN_CENTER;
+		// pulse = value * RC_SCALE;
+   
+		//pulse = limit(0, value, 4095);               //lower limit 0x000 upper limit 0xFFF
+        //pulse = value + SRXL_CHAN_CENTER;
+		//pulse = value;
+		ChannelData[i] = (channelOutputs[i] * MAVLINK_SCALE) + MAVLINK_VAL_OFFSET;
         
         SRXLData[2 * i + 1] = ((pulse >> 8) & 0xff); //sends MSB first
         SRXLData[2 * i + 2] = (pulse & 0xff);
@@ -170,6 +182,8 @@ void setupPulsesDSM2()
         crc = srxlCRC16(crc, SRXLData[2 * i + 2]);
         
     }
+	
+
 
     sendByteDsm2(SRXL_FRAME_BEGIN_BYTE);
 

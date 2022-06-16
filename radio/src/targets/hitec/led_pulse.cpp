@@ -16,5 +16,7 @@ void initPulse(){
 }
 
 void sendPulse(){
-	GPIO_ToggleBits(LED_PULSE_GPIO, LED_PULSE_GPIO_PIN);
+	LED_PULSE_GPIO->ODR ^= LED_PULSE_GPIO_PIN;
+	//GPIO_ToggleBits(LED_PULSE_GPIO, LED_PULSE_GPIO_PIN);
+	//return;
 }

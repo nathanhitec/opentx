@@ -342,7 +342,7 @@ enum Analogs {
 #define STORAGE_NUM_POTS              1
 #define STORAGE_NUM_SLIDERS           2
 
-#define NUM_XPOTS                     0//STORAGE_NUM_POTS
+#define NUM_XPOTS                     1//STORAGE_NUM_POTS
 
 #define NUM_MOUSE_ANALOGS             0
 #define STORAGE_NUM_MOUSE_ANALOGS     0

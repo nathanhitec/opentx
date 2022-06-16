@@ -134,7 +134,7 @@ QString ModuleData::protocolToString(unsigned protocol)
     "PPM",
     "Silverlit A", "Silverlit B", "Silverlit C",
     "CTP1009",
-    "LP45", "DSM2", "DSMX",
+    "SRXLV1", "SRXLV2", "SRXLV5",
     "PPM16", "PPMsim",
     "FrSky XJT (D16)", "FrSky XJT (D8)", "FrSky XJT (LR12)", "FrSky DJT",
     "TBS Crossfire",

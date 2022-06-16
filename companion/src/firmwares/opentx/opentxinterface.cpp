@@ -1215,8 +1215,8 @@ void registerOpenTxFirmwares()
   addOpenTxTaranisOptions(firmware);
   registerOpenTxFirmware(firmware);
   addOpenTxRfOptions(firmware, AFHDS3);
-  /*
   
+  /*
   firmware = new OpenTxFirmware("opentx-x9d+", Firmware::tr("FrSky Taranis X9D+"), BOARD_TARANIS_X9DP);
   firmware->addOption("noras", Firmware::tr("Disable RAS (SWR)"));
   addOpenTxTaranisOptions(firmware);
@@ -1388,10 +1388,10 @@ void registerOpenTxFirmwares()
   firmware = new OpenTxFirmware("opentx-sky9x", Firmware::tr("9X with Sky9x board"), BOARD_SKY9X);
   addOpenTxArm9xOptions(firmware);
   registerOpenTxFirmware(firmware);
-
-  Firmware::setDefaultVariant(Firmware::getFirmwareForId("opentx-x9d+"));
+*/
+  Firmware::setDefaultVariant(Firmware::getFirmwareForId("opentx-hitec"));
   Firmware::setCurrentVariant(Firmware::getDefaultVariant());
-  */
+  
 }
 
 void unregisterOpenTxFirmwares()

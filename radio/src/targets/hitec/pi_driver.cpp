@@ -94,8 +94,8 @@ extern "C" void PI_DMA_STREAM_IRQHandler()
 
 
 void sendHeartbeat(){
-	
-	GPIO_ToggleBits(LED_BLUE_GPIO, LED_BLUE_GPIO_PIN);
+	LED_BLUE_GPIO->ODR ^= LED_BLUE_GPIO_PIN;
+	//GPIO_ToggleBits(LED_BLUE_GPIO, LED_BLUE_GPIO_PIN);
 
 	uint8_t sysid = 245;
 	fmav_status_t status;
